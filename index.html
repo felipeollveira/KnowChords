@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Know Chords | Documentacao do Sistema</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+	<style>
+		:root {
+			--bg: #f4f7f9;
+			--surface: #ffffff;
+			--ink: #10212b;
+			--muted: #4e6472;
+			--primary: #154666;
+			--primary-strong: #0d3650;
+			--accent: #f28f3b;
+			--line: #d5e0e7;
+			--shadow: 0 12px 32px rgba(21, 70, 102, 0.12);
+			--radius: 18px;
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			font-family: "Space Grotesk", "Segoe UI", sans-serif;
+			color: var(--ink);
+			background:
+				radial-gradient(circle at 10% 0%, #ddeaf2 0%, transparent 42%),
+				radial-gradient(circle at 90% 0%, #ebf2dd 0%, transparent 35%),
+				var(--bg);
+			line-height: 1.6;
+		}
+
+		.topbar {
+			position: sticky;
+			top: 0;
+			z-index: 20;
+			backdrop-filter: blur(10px);
+			background: rgba(244, 247, 249, 0.92);
+			border-bottom: 1px solid var(--line);
+		}
+
+		.topbar-inner {
+			max-width: 1100px;
+			margin: 0 auto;
+			padding: 14px 20px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+		}
+
+		.brand {
+			font-weight: 700;
+			color: var(--primary);
+			letter-spacing: 0.3px;
+			font-size: 1.05rem;
+		}
+
+		.badge {
+			font-family: "IBM Plex Mono", monospace;
+			background: #e8f0f5;
+			color: var(--primary-strong);
+			border: 1px solid #c6d9e5;
+			padding: 4px 10px;
+			border-radius: 999px;
+			font-size: 0.78rem;
+		}
+
+		.hero {
+			max-width: 1100px;
+			margin: 26px auto 0;
+			padding: 0 20px;
+			animation: rise 480ms ease-out;
+		}
+
+		.hero-card {
+			background: linear-gradient(140deg, #154666 0%, #1f6b95 68%, #4f9fbe 100%);
+			border-radius: var(--radius);
+			color: #f5fbff;
+			padding: 34px;
+			box-shadow: var(--shadow);
+		}
+
+		.hero h1 {
+			margin: 0 0 8px;
+			font-size: clamp(1.8rem, 2.8vw, 2.8rem);
+			line-height: 1.1;
+		}
+
+		.hero p {
+			margin: 0;
+			max-width: 760px;
+			color: #deedf7;
+			font-size: 1.02rem;
+		}
+
+		main {
+			max-width: 1100px;
+			margin: 20px auto 48px;
+			padding: 0 20px;
+			display: grid;
+			grid-template-columns: 280px minmax(0, 1fr);
+			gap: 20px;
+		}
+
+		.toc,
+		.panel {
+			background: var(--surface);
+			border: 1px solid var(--line);
+			border-radius: var(--radius);
+			box-shadow: 0 4px 20px rgba(21, 70, 102, 0.05);
+		}
+
+		.toc {
+			position: sticky;
+			top: 86px;
+			align-self: start;
+			padding: 18px;
+			animation: rise 560ms ease-out;
+		}
+
+		.toc h2 {
+			margin: 0 0 12px;
+			font-size: 1rem;
+			color: var(--primary);
+			letter-spacing: 0.3px;
+		}
+
+		.toc a {
+			display: block;
+			text-decoration: none;
+			color: var(--muted);
+			padding: 8px 10px;
+			border-radius: 10px;
+			font-size: 0.92rem;
+			transition: background-color 140ms ease, color 140ms ease;
+		}
+
+		.toc a:hover {
+			background: #e9f3f9;
+			color: var(--primary-strong);
+		}
+
+		.content {
+			display: grid;
+			gap: 16px;
+			animation: rise 640ms ease-out;
+		}
+
+		.panel {
+			padding: 22px;
+		}
+
+		.panel h3 {
+			margin-top: 0;
+			margin-bottom: 8px;
+			font-size: 1.2rem;
+			color: var(--primary);
+		}
+
+		.panel p {
+			margin: 8px 0;
+			color: #263c49;
+		}
+
+		.panel ul,
+		.panel ol {
+			margin: 8px 0 0;
+			padding-left: 20px;
+		}
+
+		.panel li {
+			margin: 6px 0;
+			color: #263c49;
+		}
+
+		.code {
+			font-family: "IBM Plex Mono", Consolas, monospace;
+			background: #112b3a;
+			color: #d4f3ff;
+			padding: 12px 14px;
+			border-radius: 12px;
+			overflow-x: auto;
+			white-space: pre;
+			margin-top: 10px;
+			font-size: 0.9rem;
+		}
+
+		.grid-2 {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 14px;
+		}
+
+		.mini {
+			background: #f8fbfd;
+			border: 1px dashed #c4d7e4;
+			border-radius: 12px;
+			padding: 12px;
+		}
+
+		.mini h4 {
+			margin: 0 0 8px;
+			color: var(--primary-strong);
+			font-size: 0.98rem;
+		}
+
+		.footer {
+			text-align: center;
+			color: var(--muted);
+			font-size: 0.9rem;
+			padding: 22px 10px 34px;
+		}
+
+		@keyframes rise {
+			from {
+				opacity: 0;
+				transform: translateY(10px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		@media (max-width: 900px) {
+			main {
+				grid-template-columns: 1fr;
+			}
+
+			.toc {
+				position: static;
+			}
+
+			.grid-2 {
+				grid-template-columns: 1fr;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header class="topbar">
+		<div class="topbar-inner">
+			<div class="brand">Know Chords</div>
+			<span class="badge">Documentacao do Sistema</span>
+		</div>
+	</header>
+
+	<section class="hero">
+		<div class="hero-card">
+			<h1>Know Chords</h1>
+			<p>
+				Aplicativo Flutter para estudo harmonico, montagem de progressoes e transposicao automatica
+				por tom, com foco em uso rapido para violao/guitarra.
+			</p>
+		</div>
+	</section>
+
+	<main>
+		<aside class="toc">
+			<h2>Secoes</h2>
+			<a href="#visao-geral">1. Visao Geral</a>
+			<a href="#funcionalidades">2. Funcionalidades</a>
+			<a href="#arquitetura">3. Arquitetura</a>
+			<a href="#regras">4. Regras de Negocio</a>
+			<a href="#stack">5. Stack Tecnologica</a>
+			<a href="#execucao">6. Como Executar</a>
+			<a href="#qualidade">7. Qualidade e Testes</a>
+			<a href="#evolucao">8. Estagio</a>
+		</aside>
+
+		<div class="content">
+			<section id="visao-geral" class="panel">
+				<h3>1. Visao Geral</h3>
+				<p>O sistema permite selecionar um tom, visualizar acordes diatonicos e montar uma sequencia de forma interativa.</p>
+				<p>A transposicao ocorre automaticamente quando o tom base muda, mantendo o padrao harmonico por indices de grau.</p>
+			</section>
+
+			<section id="funcionalidades" class="panel">
+				<h3>2. Funcionalidades Implementadas</h3>
+				<ul>
+					<li>Selecao de tom entre 12 opcoes.</li>
+					<li>Renderizacao dos acordes disponiveis para o tom selecionado.</li>
+					<li>Montagem de sequencia com repeticao de acordes.</li>
+					<li>Remocao individual de acordes da sequencia.</li>
+					<li>Acao para limpar a sequencia completa.</li>
+					<li>Tela "Salvos" preparada para futura persistencia.</li>
+				</ul>
+			</section>
+
+			<section id="arquitetura" class="panel">
+				<h3>3. Arquitetura Atual</h3>
+				<div class="grid-2">
+					<div class="mini">
+						<h4>Entrada e Navegacao</h4>
+						<p><strong>main.dart</strong> inicializa o app e controla as abas Home e Salvos via NavigationBar.</p>
+					</div>
+					<div class="mini">
+						<h4>Dados Harmonicos</h4>
+						<p><strong>data/acordes.dart</strong> define tons e o mapeamento de acordes por tom.</p>
+					</div>
+					<div class="mini">
+						<h4>Telas</h4>
+						<p><strong>screens/home_screen.dart</strong> concentra o fluxo principal; <strong>screens/salvos_screen.dart</strong> e placeholder.</p>
+					</div>
+					<div class="mini">
+						<h4>Widgets</h4>
+						<p><strong>widgets/</strong> contem componentes reutilizaveis: seletor de tom e lista de acordes.</p>
+					</div>
+				</div>
+			</section>
+
+			<section id="regras" class="panel">
+				<h3>4. Regras de Negocio</h3>
+				<ol>
+					<li>A sequencia e armazenada por indice e nao por nome fixo de acorde.</li>
+					<li>Ao trocar o tom, o sistema aplica os mesmos indices no novo conjunto de acordes.</li>
+					<li>Sem tom selecionado, a lista de acordes fica oculta.</li>
+					<li>Duplicatas na sequencia sao permitidas por design.</li>
+				</ol>
+			</section>
+
+			<section id="stack" class="panel">
+				<h3>5. Stack Tecnologica</h3>
+				<ul>
+					<li>Flutter + Dart</li>
+					<li>Material 3 para UI</li>
+					<li>Dependencias principais: cupertino_icons</li>
+					<li>Dependencias de dev: flutter_test, flutter_launcher_icons</li>
+				</ul>
+			</section>
+
+			<section id="execucao" class="panel">
+				<h3>6. Como Executar</h3>
+				<p>Com Flutter configurado no ambiente, execute:</p>
+				<div class="code">flutter pub get
+flutter run</div>
+				<p>Builds comuns:</p>
+				<div class="code">flutter build apk
+flutter build ios
+flutter build windows</div>
+			</section>
+
+			<section id="qualidade" class="panel">
+				<h3>7. Qualidade e Testes</h3>
+				<p>Validacoes recomendadas antes de publicar versoes:</p>
+				<div class="code">flutter analyze
+flutter test</div>
+			</section>
+
+			<section id="evolucao" class="panel">
+				<h3>8. Estagio</h3>
+				<ul>
+					<li>Desenvolvimento de funcionalidades adicionais. OK</li>
+					<li>Implementacao de persistencia para sequencias salvas. EM BREVE</li>
+                    <li>Publicacao do aplicativo em lojas. EM BREVE</li>
+				</ul>
+			</section>
+		</div>
+	</main>
+
+	<footer class="footer">
+		Know Chords - Documentacao gerada para acompanhamento tecnico do sistema.
+	</footer>
+</body>
+</html>
