@@ -24,30 +24,36 @@ class _AcordesAppState extends State<AcordesApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Know Chords',
+      title: 'KnowChords',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFF7FAFC),
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF154666)),
+        scaffoldBackgroundColor: const Color(0xFFF5F8FC),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF3B82F6),
+          brightness: Brightness.light,
+        ),
         useMaterial3: true,
       ),
       home: Scaffold(
         body: _telas[_selectedIndex],
         bottomNavigationBar: NavigationBar(
           backgroundColor: Colors.white,
-          indicatorColor: const Color(0xFF154666).withOpacity(0.1),
+          elevation: 0,
+          surfaceTintColor: Colors.transparent,
+          indicatorColor: const Color(0xFF3B82F6).withValues(alpha: 0.12),
           selectedIndex: _selectedIndex,
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
           onDestinationSelected: (index) => setState(() => _selectedIndex = index),
           destinations: const [
             NavigationDestination(
-              icon: Icon(Icons.cloud_outlined),
-              selectedIcon: Icon(Icons.cloud, color: Color(0xFF154666)),
-              label: 'Home',
+              icon: Icon(Icons.queue_music_outlined),
+              selectedIcon: Icon(Icons.queue_music, color: Color(0xFF3B82F6)),
+              label: 'Progressão',
             ),
             NavigationDestination(
-              icon: Icon(Icons.bookmark_outline),
-              selectedIcon: Icon(Icons.bookmark, color: Color(0xFF154666)),
-              label: 'Salvos',
+              icon: Icon(Icons.favorite_outline),
+              selectedIcon: Icon(Icons.favorite, color: Color(0xFF3B82F6)),
+              label: 'Favoritos',
             ),
           ],
         ),

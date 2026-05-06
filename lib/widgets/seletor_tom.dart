@@ -10,11 +10,11 @@ class SeletorTom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 100,
+      height: 52,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: tons.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
           final tom = tons[index];
           final isSelected = tomSelecionado == tom;
@@ -22,41 +22,38 @@ class SeletorTom extends StatelessWidget {
           return GestureDetector(
             onTap: () => onSelecionar(isSelected ? null : tom),
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
+              duration: const Duration(milliseconds: 180),
               curve: Curves.easeInOut,
-              width: 80,
-              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 8),
+              width: 60,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(18),
-                gradient: isSelected
-                    ? const LinearGradient(
-                  colors: [Color(0xFF0D3B66), Color(0xFF154666)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                )
-                    : null,
-                color: isSelected ? null : Colors.white,
-                border: Border.all(color: isSelected ? Colors.transparent : Colors.grey.shade300),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: isSelected ? 10 : 4,
-                    offset: Offset(0, isSelected ? 4 : 2),
-                  ),
-                ],
+                borderRadius: BorderRadius.circular(100),
+                color: isSelected ? const Color(0xFF3B82F6) : Colors.white,
+                boxShadow: isSelected
+                    ? [
+                        BoxShadow(
+                          color: const Color(0xFF3B82F6).withValues(alpha: 0.32),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ]
+                    : [
+                        BoxShadow(
+                          color: const Color(0xFF0C1A2E).withValues(alpha: 0.06),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
               ),
               child: Center(
                 child: AnimatedDefaultTextStyle(
-                  duration: const Duration(milliseconds: 250),
+                  duration: const Duration(milliseconds: 180),
                   style: TextStyle(
-                    color: isSelected ? Colors.white : Colors.black87,
-                    fontWeight: FontWeight.bold,
-                    fontSize: isSelected ? 18 : 16,
+                    color: isSelected ? Colors.white : const Color(0xFF4B5563),
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                    fontSize: 15,
+                    letterSpacing: -0.2,
                   ),
-                  child: Text(
-                    tom,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  child: Text(tom),
                 ),
               ),
             ),
