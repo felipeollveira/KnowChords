@@ -79,25 +79,30 @@ class _HomeScreenState extends State<HomeScreen> {
     _playbackTimer?.cancel();
     _posicaoParaSubstituir = null;
 
-    int currentIndex = 0;
-    final duracaoMs = (60000 * 2 / _bpm).round(); // 2 beats por acorde
-
     setState(() {
       _tocando = true;
       _acordeAtual = 0;
     });
 
     _chordPlayer.playChord(acordesDoTom[indicesSelecionados[0]]);
+    _agendarProximo(acordesDoTom, 0);
+  }
 
-    _playbackTimer = Timer.periodic(Duration(milliseconds: duracaoMs), (_) {
-      if (!mounted) return;
+  void _agendarProximo(List<String> acordesDoTom, int indiceAtual) {
+    final duracaoMs = (60000 * 2 / _bpm).round();
+    // Primeiro acorde fica o dobro do tempo — funciona como acorde de resolução
+    final espera = indiceAtual == 0 ? duracaoMs * 2 : duracaoMs;
+
+    _playbackTimer = Timer(Duration(milliseconds: espera), () {
+      if (!mounted || !_tocando) return;
       if (indicesSelecionados.isEmpty) {
         _pararProgressao();
         return;
       }
-      currentIndex = (currentIndex + 1) % indicesSelecionados.length;
-      setState(() => _acordeAtual = currentIndex);
-      _chordPlayer.playChord(acordesDoTom[indicesSelecionados[currentIndex]]);
+      final proximo = (indiceAtual + 1) % indicesSelecionados.length;
+      setState(() => _acordeAtual = proximo);
+      _chordPlayer.playChord(acordesDoTom[indicesSelecionados[proximo]]);
+      _agendarProximo(acordesDoTom, proximo);
     });
   }
 
