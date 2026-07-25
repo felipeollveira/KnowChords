@@ -114,34 +114,30 @@ function minorVoicing(root) {
 }
 
 const chords = [
-  // Major
+  // Major — usa nomes bemóis para sustenidos (Db=C#, Eb=D#, Gb=F#, Ab=G#, Bb=A#)
   { file: 'C',  root: 'C',  minor: false },
-  { file: 'Cs', root: 'Cs', minor: false },
+  { file: 'Db', root: 'Cs', minor: false },
   { file: 'D',  root: 'D',  minor: false },
-  { file: 'Ds', root: 'Ds', minor: false },
   { file: 'Eb', root: 'Eb', minor: false },
   { file: 'E',  root: 'E',  minor: false },
   { file: 'F',  root: 'F',  minor: false },
-  { file: 'Fs', root: 'Fs', minor: false },
+  { file: 'Gb', root: 'Fs', minor: false },
   { file: 'G',  root: 'G',  minor: false },
-  { file: 'Gs', root: 'Gs', minor: false },
   { file: 'Ab', root: 'Ab', minor: false },
   { file: 'A',  root: 'A',  minor: false },
-  { file: 'As', root: 'As', minor: false },
   { file: 'Bb', root: 'Bb', minor: false },
   { file: 'B',  root: 'B',  minor: false },
   // Minor
   { file: 'Cm',  root: 'C',  minor: true },
-  { file: 'Csm', root: 'Cs', minor: true },
+  { file: 'Dbm', root: 'Cs', minor: true },
   { file: 'Dm',  root: 'D',  minor: true },
-  { file: 'Dsm', root: 'Ds', minor: true },
+  { file: 'Ebm', root: 'Ds', minor: true },
   { file: 'Em',  root: 'E',  minor: true },
   { file: 'Fm',  root: 'F',  minor: true },
-  { file: 'Fsm', root: 'Fs', minor: true },
+  { file: 'Gbm', root: 'Fs', minor: true },
   { file: 'Gm',  root: 'G',  minor: true },
-  { file: 'Gsm', root: 'Gs', minor: true },
+  { file: 'Abm', root: 'Gs', minor: true },
   { file: 'Am',  root: 'A',  minor: true },
-  { file: 'Asm', root: 'As', minor: true },
   { file: 'Bbm', root: 'Bb', minor: true },
   { file: 'Bm',  root: 'B',  minor: true },
 ];

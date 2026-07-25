@@ -1,29 +1,28 @@
 import 'package:audioplayers/audioplayers.dart';
 
-// Major: C.mp3 Cs.mp3 D.mp3 Eb.mp3 E.mp3 F.mp3 Fs.mp3 G.mp3 Ab.mp3 A.mp3 Bb.mp3 B.mp3
-// Minor: Cm.mp3 Csm.mp3 Dm.mp3 Dsm.mp3 Em.mp3 Fm.mp3 Fsm.mp3 Gm.mp3 Gsm.mp3 Am.mp3 Asm.mp3 Bbm.mp3 Bm.mp3
 class ChordPlayer {
   static const Map<String, String> _chordFiles = {
-    'C': 'C',    'C#': 'Cs',  'Db': 'Cs',
-    'D': 'D',    'D#': 'Ds',  'Eb': 'Eb',
-    'E': 'E',    'F': 'F',    'F#': 'Fs',  'Gb': 'Fs',
-    'G': 'G',    'G#': 'Gs',  'Ab': 'Ab',
-    'A': 'A',    'A#': 'As',  'Bb': 'Bb',  'B': 'B',
-    'Cm': 'Cm',  'C#m': 'Csm', 'Dbm': 'Csm',
-    'Dm': 'Dm',  'D#m': 'Dsm', 'Ebm': 'Dsm',
-    'Em': 'Em',  'Fm': 'Fm',  'F#m': 'Fsm',
-    'Gm': 'Gm',  'G#m': 'Gsm', 'Abm': 'Gsm',
-    'Am': 'Am',  'A#m': 'Asm', 'Bbm': 'Bbm', 'Bm': 'Bm',
+    'C': 'C',    'C#': 'Db',  'Db': 'Db',
+    'D': 'D',    'D#': 'Eb',  'Eb': 'Eb',
+    'E': 'E',    'F': 'F',    'F#': 'Gb',  'Gb': 'Gb',
+    'G': 'G',    'G#': 'Ab',  'Ab': 'Ab',
+    'A': 'A',    'A#': 'Bb',  'Bb': 'Bb',  'B': 'B',
+    'Cm': 'Cm',  'C#m': 'Dbm', 'Dbm': 'Dbm',
+    'Dm': 'Dm',  'D#m': 'Ebm', 'Ebm': 'Ebm',
+    'Em': 'Em',  'Fm': 'Fm',  'F#m': 'Gbm', 'Gbm': 'Gbm',
+    'Gm': 'Gm',  'G#m': 'Abm', 'Abm': 'Abm',
+    'Am': 'Am',  'A#m': 'Bbm', 'Bbm': 'Bbm', 'Bm': 'Bm',
   };
 
   final AudioPlayer _player = AudioPlayer();
+
 
   Future<void> playChord(String chordName) async {
     final fileName = _chordFiles[chordName];
     if (fileName == null) return;
     try {
       await _player.stop();
-      await _player.play(AssetSource('audio/chords/$fileName.wav'));
+      await _player.play(AssetSource('audio/chords/$fileName.wav', mimeType: 'audio/wav'));
     } catch (_) {}
   }
 
