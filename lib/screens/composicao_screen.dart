@@ -64,6 +64,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
   // índice da sílaba → índice do acorde na escala (0–5)
   // Trocar o tom transpõe automaticamente pois os índices são preservados
   final Map<int, int> _acordesPorSilaba = {};
+  final Map<int, int> _batidasPorSilaba = {};
   List<List<Object>> _linhas = []; // List<_Palavra | String>
 
   // Playback
@@ -96,6 +97,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
     setState(() {
       _linhas = _tokenizar(texto);
       _acordesPorSilaba.clear();
+      _batidasPorSilaba.clear();
       _silabaAtiva = null;
       _modoEdicao = false;
     });
@@ -132,12 +134,18 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
 
   void _atribuirAcorde(int chordIdx) {
     if (_silabaAtiva == null) return;
-    setState(() => _acordesPorSilaba[_silabaAtiva!] = chordIdx);
+    setState(() {
+      _acordesPorSilaba[_silabaAtiva!] = chordIdx;
+      _batidasPorSilaba.putIfAbsent(_silabaAtiva!, () => 2);
+    });
   }
 
   void _removerAcorde() {
     if (_silabaAtiva == null) return;
-    setState(() => _acordesPorSilaba.remove(_silabaAtiva));
+    setState(() {
+      _acordesPorSilaba.remove(_silabaAtiva);
+      _batidasPorSilaba.remove(_silabaAtiva);
+    });
   }
 
   // ── Playback ──────────────────────────────────────────────────────────────
@@ -164,7 +172,9 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
   }
 
   void _agendarProximo(List<String> seq, int atual) {
-    _playbackTimer = Timer(Duration(milliseconds: (60000 * 2 / _bpm).round()), () {
+    final beatMs = (60000 / _bpm).round();
+    final batidas = _batidasPorSilaba[_chavesDaSequencia[atual]] ?? 2;
+    _playbackTimer = Timer(Duration(milliseconds: beatMs * batidas), () {
       if (!mounted || !_tocando) return;
       final proximo = (atual + 1) % seq.length;
       final silabaProxima = _chavesDaSequencia[proximo];
@@ -327,12 +337,15 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
           child: GestureDetector(
             onTap: () => setState(() => _silabaAtiva = null),
             behavior: HitTestBehavior.translucent,
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: List.generate(_linhas.length, (i) => _buildLinha(_linhas[i], acordesDoTom, i)),
+            child: Container(
+              color: Colors.white,
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                padding: const EdgeInsets.fromLTRB(22, 18, 22, 28),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: List.generate(_linhas.length, (i) => _buildLinha(_linhas[i], acordesDoTom, i)),
+                ),
               ),
             ),
           ),
@@ -346,13 +359,13 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
 
   Widget _buildLinha(List<Object> items, List<String> acordesDoTom, int linhaIdx) {
     final key = _linhaKeys.putIfAbsent(linhaIdx, () => GlobalKey());
-    if (items.isEmpty) return SizedBox(key: key, height: 32);
+    if (items.isEmpty) return SizedBox(key: key, height: 44);
     return Padding(
       key: key,
-      padding: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Wrap(
         crossAxisAlignment: WrapCrossAlignment.end,
-        runSpacing: 6,
+        runSpacing: 14,
         children: items.map((item) {
           if (item is String) return _buildSep(item);
           return _buildPalavra(item as _Palavra, acordesDoTom);
@@ -367,8 +380,8 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 24), // placeholder chord area
-        Text(texto, style: const TextStyle(fontSize: 18, height: 1.0, color: Color(0xFF1E293B))),
+        const SizedBox(height: 28),
+        Text(texto, style: const TextStyle(fontSize: 19, height: 1.0, color: Color(0xFF1E293B))),
       ],
     );
   }
@@ -392,27 +405,33 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
   // ── Sílaba ────────────────────────────────────────────────────────────────
 
   Widget _buildSilaba(String texto, int indice, String? acorde) {
-    final tocando = _silabaToando == indice;
-    final ativa   = !tocando && _silabaAtiva == indice;
+    final tocando   = _silabaToando == indice;
+    final ativa     = !tocando && _silabaAtiva == indice;
     final temAcorde = acorde != null;
     final tomAtivo  = _tomSelecionado != null;
+    final batidas   = _batidasPorSilaba[indice] ?? 2;
+
+    final Color badgeColor = tocando
+        ? const Color(0xFF16A34A)
+        : ativa
+            ? const Color(0xFFF59E0B)
+            : const Color(0xFF2563EB);
 
     BoxDecoration deco;
     if (tocando) {
       deco = BoxDecoration(
         color: const Color(0xFFDCFCE7),
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: const Color(0xFF22C55E), width: 1.5),
+        borderRadius: BorderRadius.circular(5),
       );
     } else if (ativa) {
       deco = BoxDecoration(
         color: const Color(0xFFFEF3C7),
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: const Color(0xFFFBBF24), width: 1.5),
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(color: const Color(0xFFFBBF24).withValues(alpha: 0.6), width: 1.5),
       );
     } else if (temAcorde) {
-      deco = const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Color(0xFF93C5FD), width: 2)),
+      deco = BoxDecoration(
+        border: Border(bottom: BorderSide(color: badgeColor.withValues(alpha: 0.35), width: 2)),
       );
     } else if (tomAtivo) {
       deco = const BoxDecoration(
@@ -422,39 +441,69 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
       deco = const BoxDecoration();
     }
 
-    // Cor do acorde acima: verde quando tocando, azul no resto
-    final corAcorde = tocando ? const Color(0xFF16A34A) : const Color(0xFF2563EB);
-
     return GestureDetector(
       onTap: _tocando ? null : () => _selecionarSilaba(indice),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 140),
         decoration: deco,
+        padding: EdgeInsets.symmetric(horizontal: ativa || tocando ? 3 : 0, vertical: ativa || tocando ? 1 : 0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Área do acorde — largura 0 para não alargar a sílaba; acorde flutua via OverflowBox
+            // Badge do acorde — largura 0 para não alargar a sílaba; badge flutua via OverflowBox
             SizedBox(
-              height: 24,
+              height: 28,
               width: 0,
               child: OverflowBox(
-                maxWidth: 100,
+                maxWidth: 120,
                 alignment: Alignment.bottomLeft,
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 180),
                   transitionBuilder: (child, anim) =>
                       FadeTransition(opacity: anim, child: child),
                   child: temAcorde
-                      ? Text(
-                          acorde,
-                          key: ValueKey('$acorde-$tocando'),
-                          style: TextStyle(
-                            fontSize: tocando ? 15 : 14,
-                            fontWeight: FontWeight.bold,
-                            color: corAcorde,
-                            letterSpacing: 0.2,
-                            height: 1.0,
+                      ? Container(
+                          key: ValueKey('$acorde-$tocando-$ativa'),
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: badgeColor,
+                            borderRadius: BorderRadius.circular(6),
+                            boxShadow: tocando
+                                ? [BoxShadow(
+                                    color: badgeColor.withValues(alpha: 0.45),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  )]
+                                : null,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                acorde,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.white,
+                                  letterSpacing: 0.3,
+                                  height: 1.0,
+                                ),
+                              ),
+                              if (batidas != 2) ...[
+                                const SizedBox(width: 3),
+                                Text(
+                                  '×$batidas',
+                                  style: TextStyle(
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white.withValues(alpha: 0.8),
+                                    height: 1.0,
+                                  ),
+                                ),
+                              ],
+                            ],
                           ),
                         )
                       : const SizedBox.shrink(key: ValueKey('_empty')),
@@ -465,14 +514,22 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 140),
               style: TextStyle(
-                fontSize: tocando ? 20 : 18,
+                fontSize: tocando ? 21 : 19,
                 height: 1.0,
-                fontWeight: tocando ? FontWeight.w700 : ativa ? FontWeight.w600 : FontWeight.w400,
+                fontWeight: tocando
+                    ? FontWeight.w700
+                    : ativa
+                        ? FontWeight.w600
+                        : temAcorde
+                            ? FontWeight.w500
+                            : FontWeight.w400,
                 color: tocando
                     ? const Color(0xFF166534)
                     : ativa
                         ? const Color(0xFF92400E)
-                        : const Color(0xFF1E293B),
+                        : temAcorde
+                            ? const Color(0xFF0F172A)
+                            : const Color(0xFF475569),
               ),
               child: Text(texto),
             ),
@@ -615,6 +672,66 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
               ),
             ],
           ),
+
+          // ── Duração por sílaba ─────────────────────────────────
+          if (_silabaAtiva != null && idxAtivo != null) ...[
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                const Text(
+                  'DURAÇÃO',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF94A3B8),
+                    letterSpacing: 0.8,
+                  ),
+                ),
+                const SizedBox(width: 14),
+                ...List.generate(4, (i) {
+                  final beats = i + 1;
+                  final atual = _batidasPorSilaba[_silabaAtiva!] ?? 2;
+                  final selecionado = atual == beats;
+                  return Padding(
+                    padding: EdgeInsets.only(right: i < 3 ? 8 : 0),
+                    child: GestureDetector(
+                      onTap: () => setState(() => _batidasPorSilaba[_silabaAtiva!] = beats),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        width: 48,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: selecionado ? const Color(0xFF2563EB) : const Color(0xFFF1F5F9),
+                          borderRadius: BorderRadius.circular(9),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '$beats',
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w800,
+                                color: selecionado ? Colors.white : const Color(0xFF1E293B),
+                              ),
+                            ),
+                            Text(
+                              beats == 1 ? 'bat.' : 'bat.',
+                              style: TextStyle(
+                                fontSize: 8,
+                                fontWeight: FontWeight.w600,
+                                color: selecionado ? Colors.white60 : const Color(0xFFADB9C7),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ],
 
           // ── Playback ───────────────────────────────────────────
           const Padding(
