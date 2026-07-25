@@ -227,23 +227,37 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
     );
   }
 
+  
   Widget _buildHeader() {
     return Container(
+      padding: const EdgeInsets.fromLTRB(24, 28, 24, 32),
       color: const Color(0xFF0C1A2E),
-      padding: const EdgeInsets.fromLTRB(20, 16, 12, 16),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Expanded(
-            child: Text(
-              'Composição',
-              style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-            ),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(7),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF3B82F6),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.queue_music_rounded, color: Colors.white, size: 16),
+              ),
+              const SizedBox(width: 10),
+              const Text(
+                "Composição",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w200,
+                  letterSpacing: -0.2,
+                ),
+              ),
+            ],
           ),
-          if (!_modoEdicao)
-            TextButton(
-              onPressed: () { _pararAcordes(); setState(() { _modoEdicao = true; _silabaAtiva = null; }); },
-              child: const Text('Editar letra', style: TextStyle(color: Color(0xFF3B82F6))),
-            ),
+
         ],
       ),
     );
