@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 import 'screens/salvos_screen.dart';
+import 'screens/composicao_screen.dart';
 
 void main() {
   runApp(const AcordesApp());
@@ -18,13 +19,14 @@ class _AcordesAppState extends State<AcordesApp> {
 
   final List<Widget> _telas = [
     const HomeScreen(),
+    const ComposicaoScreen(),
     const SalvosScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'KnowChords',
+      title: 'KC',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFFF5F8FC),
@@ -49,6 +51,11 @@ class _AcordesAppState extends State<AcordesApp> {
               icon: Icon(Icons.queue_music_outlined),
               selectedIcon: Icon(Icons.queue_music, color: Color(0xFF3B82F6)),
               label: 'Progressão',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.lyrics_outlined),
+              selectedIcon: Icon(Icons.lyrics, color: Color(0xFF3B82F6)),
+              label: 'Composição',
             ),
             NavigationDestination(
               icon: Icon(Icons.favorite_outline),

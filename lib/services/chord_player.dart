@@ -1,9 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 
-// Audio files needed in assets/audio/chords/
 // Major: C.mp3 Cs.mp3 D.mp3 Eb.mp3 E.mp3 F.mp3 Fs.mp3 G.mp3 Ab.mp3 A.mp3 Bb.mp3 B.mp3
 // Minor: Cm.mp3 Csm.mp3 Dm.mp3 Dsm.mp3 Em.mp3 Fm.mp3 Fsm.mp3 Gm.mp3 Gsm.mp3 Am.mp3 Asm.mp3 Bbm.mp3 Bm.mp3
-// Free guitar/piano chord samples: freesound.org, sampleswap.org, or record your own.
 class ChordPlayer {
   static const Map<String, String> _chordFiles = {
     'C': 'C',    'C#': 'Cs',  'Db': 'Cs',
