@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../data/acordes.dart';
 import '../services/chord_player.dart';
+import '../services/save_service.dart';
+import '../models/saved_item.dart';
 import '../widgets/seletor_tom.dart';
 
 // ── Silabificação ─────────────────────────────────────────────────────────────
@@ -81,12 +83,111 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
   final Map<int, GlobalKey> _linhaKeys = {};
 
   @override
+  void initState() {
+    super.initState();
+    SaveService.instance.loadComposicao.addListener(_onLoad);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _onLoad());
+  }
+
+  @override
   void dispose() {
+    SaveService.instance.loadComposicao.removeListener(_onLoad);
     _controller.dispose();
     _playbackTimer?.cancel();
     _chordPlayer.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onLoad() {
+    final item = SaveService.instance.loadComposicao.value;
+    if (item == null) return;
+    _pararAcordes();
+    setState(() {
+      _controller.text = item.letra;
+      _tomSelecionado = item.tom;
+      _acordesPorSilaba
+        ..clear()
+        ..addAll(item.acordesPorSilaba);
+      _batidasPorSilaba
+        ..clear()
+        ..addAll(item.batidasPorSilaba);
+      _bpm = item.bpm;
+      _linhas = _tokenizar(item.letra);
+      _modoEdicao = false;
+      _silabaAtiva = null;
+    });
+    SaveService.instance.loadComposicao.value = null;
+  }
+
+  Future<void> _salvar() async {
+    if (_tomSelecionado == null || _acordesPorSilaba.isEmpty) return;
+    final controller = TextEditingController();
+    final nome = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.fromLTRB(24, 16, 24, MediaQuery.of(ctx).viewInsets.bottom + 28),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: Container(width: 36, height: 4,
+              decoration: BoxDecoration(color: const Color(0xFFCBD5E0), borderRadius: BorderRadius.circular(2)))),
+            const SizedBox(height: 20),
+            const Text('Salvar Composição',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color(0xFF0F1D2E))),
+            const SizedBox(height: 16),
+            TextField(
+              controller: controller,
+              autofocus: true,
+              textCapitalization: TextCapitalization.sentences,
+              onSubmitted: (v) => Navigator.pop(ctx, v.trim()),
+              decoration: InputDecoration(
+                hintText: 'Nome da composição...',
+                filled: true,
+                fillColor: const Color(0xFFF5F8FC),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: () => Navigator.pop(ctx, controller.text.trim()),
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFF2563EB),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: const Text('Salvar', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (nome == null || nome.isEmpty) return;
+    await SaveService.instance.salvar(ComposicaoSalva(
+      id: SaveService.newId(),
+      nome: nome,
+      criadoEm: DateTime.now(),
+      letra: _controller.text,
+      tom: _tomSelecionado!,
+      acordesPorSilaba: Map.from(_acordesPorSilaba),
+      batidasPorSilaba: Map.from(_batidasPorSilaba),
+      bpm: _bpm,
+    ));
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Composição salva!'), behavior: SnackBarBehavior.floating),
+      );
+    }
   }
 
   // ── Ações ────────────────────────────────────────────────────────────────
@@ -239,8 +340,9 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
 
   
   Widget _buildHeader() {
+    final podeSalvar = !_modoEdicao && _tomSelecionado != null && _acordesPorSilaba.isNotEmpty;
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 28, 24, 32),
+      padding: const EdgeInsets.fromLTRB(24, 28, 16, 32),
       color: const Color(0xFF0C1A2E),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,9 +367,17 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
                   letterSpacing: -0.2,
                 ),
               ),
+              const Spacer(),
+              if (!_modoEdicao)
+                IconButton(
+                  onPressed: podeSalvar ? _salvar : null,
+                  icon: const Icon(Icons.bookmark_add_outlined),
+                  color: podeSalvar ? const Color(0xFF3B82F6) : Colors.white24,
+                  iconSize: 22,
+                  tooltip: 'Salvar composição',
+                ),
             ],
           ),
-
         ],
       ),
     );

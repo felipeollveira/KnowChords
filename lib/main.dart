@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 import 'screens/salvos_screen.dart';
 import 'screens/composicao_screen.dart';
+import 'services/save_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SaveService.instance.init();
   runApp(const AcordesApp());
 }
 
@@ -17,11 +20,17 @@ class AcordesApp extends StatefulWidget {
 class _AcordesAppState extends State<AcordesApp> {
   int _selectedIndex = 0;
 
-  final List<Widget> _telas = [
-    const HomeScreen(),
-    const ComposicaoScreen(),
-    const SalvosScreen(),
-  ];
+  late final List<Widget> _telas;
+
+  @override
+  void initState() {
+    super.initState();
+    _telas = [
+      const HomeScreen(),
+      const ComposicaoScreen(),
+      SalvosScreen(onNavegar: (i) => setState(() => _selectedIndex = i)),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +46,7 @@ class _AcordesAppState extends State<AcordesApp> {
         useMaterial3: true,
       ),
       home: Scaffold(
-        body: _telas[_selectedIndex],
+        body: IndexedStack(index: _selectedIndex, children: _telas),
         bottomNavigationBar: NavigationBar(
           backgroundColor: Colors.white,
           elevation: 0,

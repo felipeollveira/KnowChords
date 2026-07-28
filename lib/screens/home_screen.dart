@@ -5,6 +5,8 @@ import '../../data/acordes.dart';
 import '../widgets/seletor_tom.dart';
 import '../widgets/lista_acordes.dart';
 import '../services/chord_player.dart';
+import '../services/save_service.dart';
+import '../models/saved_item.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,13 +31,103 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    SaveService.instance.loadProgressao.addListener(_onLoad);
+    // Valor pode ter sido setado antes do listener ser registrado
+    WidgetsBinding.instance.addPostFrameCallback((_) => _onLoad());
   }
 
   @override
   void dispose() {
+    SaveService.instance.loadProgressao.removeListener(_onLoad);
     _playbackTimer?.cancel();
     _chordPlayer.dispose();
     super.dispose();
+  }
+
+  void _onLoad() {
+    final item = SaveService.instance.loadProgressao.value;
+    if (item == null) return;
+    _pararProgressao();
+    setState(() {
+      tomSelecionado = item.tom;
+      indicesSelecionados = List.from(item.indices);
+      _batidasPorAcorde = List.from(item.batidas);
+      _bpm = item.bpm;
+      _posicaoParaSubstituir = null;
+    });
+    SaveService.instance.loadProgressao.value = null;
+  }
+
+  Future<void> _salvar() async {
+    if (indicesSelecionados.isEmpty || tomSelecionado == null) return;
+    final acordesDoTom = obterAcordesDoTom(tomSelecionado!);
+    final preview = indicesSelecionados.map((i) => acordesDoTom[i]).join(' · ');
+
+    final controller = TextEditingController(text: preview.length < 30 ? preview : '');
+    final nome = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.fromLTRB(24, 16, 24, MediaQuery.of(ctx).viewInsets.bottom + 28),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: Container(width: 36, height: 4,
+              decoration: BoxDecoration(color: const Color(0xFFCBD5E0), borderRadius: BorderRadius.circular(2)))),
+            const SizedBox(height: 20),
+            const Text('Salvar Progressão',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color(0xFF0F1D2E))),
+            const SizedBox(height: 16),
+            TextField(
+              controller: controller,
+              autofocus: true,
+              textCapitalization: TextCapitalization.sentences,
+              onSubmitted: (v) => Navigator.pop(ctx, v.trim()),
+              decoration: InputDecoration(
+                hintText: 'Nome da progressão...',
+                filled: true,
+                fillColor: const Color(0xFFF5F8FC),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: () => Navigator.pop(ctx, controller.text.trim()),
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFF3B82F6),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: const Text('Salvar', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (nome == null || nome.isEmpty) return;
+    await SaveService.instance.salvar(ProgressaoSalva(
+      id: SaveService.newId(),
+      nome: nome,
+      criadoEm: DateTime.now(),
+      tom: tomSelecionado!,
+      indices: List.from(indicesSelecionados),
+      batidas: List.from(_batidasPorAcorde),
+      bpm: _bpm,
+    ));
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Progressão salva!'), behavior: SnackBarBehavior.floating),
+      );
+    }
   }
 
   // ── Progressão ──────────────────────────────────────────────
@@ -451,7 +543,6 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 8, 0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "${indicesSelecionados.length} ${indicesSelecionados.length == 1 ? 'acorde' : 'acordes'}",
@@ -461,6 +552,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.2,
                   ),
+                ),
+                const Spacer(),
+                IconButton(
+                  onPressed: _tocando ? null : _salvar,
+                  icon: const Icon(Icons.bookmark_add_outlined),
+                  color: const Color(0xFF3B82F6),
+                  iconSize: 20,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  tooltip: 'Salvar progressão',
                 ),
                 TextButton(
                   onPressed: () {
