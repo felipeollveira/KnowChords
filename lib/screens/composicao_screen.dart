@@ -39,14 +39,17 @@ List<String> _silabificar(String palavra) {
 
 // ── Tokens ────────────────────────────────────────────────────────────────────
 
-// Uma palavra é um conjunto de sílabas (texto + índice global)
-// Sílabas da mesma palavra ficam em Row → nunca quebram no meio da palavra
 class _Palavra {
   final List<(String texto, int indice)> silabas;
   const _Palavra(this.silabas);
 }
 
-// Uma linha é uma lista de _Palavra ou String (separador: espaço, pontuação)
+// Espaços e pontuação também recebem índice → podem ter acordes atribuídos
+class _Sep {
+  final String texto;
+  final int indice;
+  const _Sep(this.texto, this.indice);
+}
 
 // ── Screen ────────────────────────────────────────────────────────────────────
 
@@ -213,7 +216,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
         if (RegExp(r'[a-zA-ZÀ-ÿ]').hasMatch(parte)) {
           items.add(_Palavra(_silabificar(parte).map((s) => (s, idx++)).toList()));
         } else {
-          items.add(parte);
+          items.add(_Sep(parte, idx++));
         }
       }
       return items;
@@ -368,7 +371,17 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
                 ),
               ),
               const Spacer(),
-              if (!_modoEdicao)
+              if (!_modoEdicao) ...[
+                IconButton(
+                  onPressed: () {
+                    _pararAcordes();
+                    setState(() { _modoEdicao = true; _silabaAtiva = null; });
+                  },
+                  icon: const Icon(Icons.edit_outlined),
+                  color: Colors.white60,
+                  iconSize: 20,
+                  tooltip: 'Editar letra',
+                ),
                 IconButton(
                   onPressed: podeSalvar ? _salvar : null,
                   icon: const Icon(Icons.bookmark_add_outlined),
@@ -376,6 +389,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
                   iconSize: 22,
                   tooltip: 'Salvar composição',
                 ),
+              ],
             ],
           ),
         ],
@@ -477,22 +491,15 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
         crossAxisAlignment: WrapCrossAlignment.end,
         runSpacing: 14,
         children: items.map((item) {
-          if (item is String) return _buildSep(item);
+          if (item is _Sep) {
+            final acorde = _acordesPorSilaba.containsKey(item.indice) && acordesDoTom.isNotEmpty
+                ? acordesDoTom[_acordesPorSilaba[item.indice]!]
+                : null;
+            return _buildSilaba(item.texto, item.indice, acorde);
+          }
           return _buildPalavra(item as _Palavra, acordesDoTom);
         }).toList(),
       ),
-    );
-  }
-
-  // Separadores (espaços, pontuação) mantêm a altura do espaço do acorde
-  Widget _buildSep(String texto) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 28),
-        Text(texto, style: const TextStyle(fontSize: 19, height: 1.0, color: Color(0xFF1E293B))),
-      ],
     );
   }
 
@@ -563,7 +570,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
           children: [
             // Badge do acorde — largura 0 para não alargar a sílaba; badge flutua via OverflowBox
             SizedBox(
-              height: 28,
+              height: 32,
               width: 0,
               child: OverflowBox(
                 maxWidth: 120,
@@ -594,7 +601,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
                               Text(
                                 acorde,
                                 style: const TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w800,
                                   color: Colors.white,
                                   letterSpacing: 0.3,
@@ -606,7 +613,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
                                 Text(
                                   '×$batidas',
                                   style: TextStyle(
-                                    fontSize: 9,
+                                    fontSize: 11,
                                     fontWeight: FontWeight.w700,
                                     color: Colors.white.withValues(alpha: 0.8),
                                     height: 1.0,
@@ -624,7 +631,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 140),
               style: TextStyle(
-                fontSize: tocando ? 21 : 19,
+                fontSize: tocando ? 24 : 22,
                 height: 1.0,
                 fontWeight: tocando
                     ? FontWeight.w700
