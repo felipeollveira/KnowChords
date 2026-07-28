@@ -40,10 +40,14 @@ dev_dependencies:
     sdk: flutter
   flutter_launcher_icons: ^0.13.1
 
-flutter_icons:
+flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "lib/assets/icon/logo.png"
+  image_path: "assets/images/knowchords-icon.png"
+  web:
+    generate: true
+    image_path: "assets/images/knowchords-icon.png"
+    favicon_path: "assets/images/knowchords.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -64,6 +68,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/images/
     - assets/audio/chords/
     - assets/audio/strings/
 

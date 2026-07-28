@@ -70,7 +70,8 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
   // Trocar o tom transpõe automaticamente pois os índices são preservados
   final Map<int, int> _acordesPorSilaba = {};
   final Map<int, int> _batidasPorSilaba = {};
-  List<List<Object>> _linhas = []; // List<_Palavra | String>
+  List<List<Object>> _linhas = [];
+  String? _currentSaveId;
 
   // Playback
   final ChordPlayer _chordPlayer = ChordPlayer();
@@ -120,6 +121,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
       _modoEdicao = false;
       _silabaAtiva = null;
     });
+    _currentSaveId = item.id;
     SaveService.instance.loadComposicao.value = null;
   }
 
@@ -177,7 +179,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
     );
     if (nome == null || nome.isEmpty) return;
     await SaveService.instance.salvar(ComposicaoSalva(
-      id: SaveService.newId(),
+      id: _currentSaveId ?? SaveService.newId(),
       nome: nome,
       criadoEm: DateTime.now(),
       letra: _controller.text,
@@ -344,8 +346,9 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
   
   Widget _buildHeader() {
     final podeSalvar = !_modoEdicao && _tomSelecionado != null && _acordesPorSilaba.isNotEmpty;
+    final landscape = MediaQuery.of(context).orientation == Orientation.landscape;
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 28, 16, 32),
+      padding: EdgeInsets.fromLTRB(24, landscape ? 10 : 28, 16, landscape ? 10 : 32),
       color: const Color(0xFF0C1A2E),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -373,9 +376,33 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
               const Spacer(),
               if (!_modoEdicao) ...[
                 IconButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    if (_acordesPorSilaba.isNotEmpty) {
+                      final ok = await showDialog<bool>(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          title: const Text('Editar letra?',
+                              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18)),
+                          content: const Text('Os acordes atribuídos serão perdidos ao editar a letra.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(ctx, false),
+                              child: const Text('Cancelar'),
+                            ),
+                            FilledButton(
+                              onPressed: () => Navigator.pop(ctx, true),
+                              style: FilledButton.styleFrom(backgroundColor: const Color(0xFFEF4444)),
+                              child: const Text('Editar assim mesmo'),
+                            ),
+                          ],
+                        ),
+                      );
+                      if (ok != true) return;
+                    }
                     _pararAcordes();
                     setState(() { _modoEdicao = true; _silabaAtiva = null; });
+                    _currentSaveId = null;
                   },
                   icon: const Icon(Icons.edit_outlined),
                   color: Colors.white60,
@@ -662,6 +689,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
     final semTom = _tomSelecionado == null;
     final semSilaba = _silabaAtiva == null;
     final idxAtivo = _silabaAtiva != null ? _acordesPorSilaba[_silabaAtiva!] : null;
+    final landscape = MediaQuery.of(context).orientation == Orientation.landscape;
 
     return Container(
       decoration: BoxDecoration(
@@ -674,13 +702,13 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
           ),
         ],
       ),
-      padding: const EdgeInsets.fromLTRB(20, 14, 20, 18),
+      padding: EdgeInsets.fromLTRB(20, landscape ? 8 : 14, 20, landscape ? 8 : 18),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Label dinâmico
-          AnimatedSwitcher(
+          // Label dinâmico — oculto em landscape para economizar espaço
+          if (!landscape) AnimatedSwitcher(
             duration: const Duration(milliseconds: 200),
             child: Text(
               semTom
@@ -701,7 +729,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          if (!landscape) const SizedBox(height: 12),
           // Linha de botões + remover
           Row(
             children: [
@@ -851,9 +879,9 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
           ],
 
           // ── Playback ───────────────────────────────────────────
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 12),
-            child: Divider(height: 1, color: Color(0xFFF1F5F9)),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: landscape ? 6 : 12),
+            child: const Divider(height: 1, color: Color(0xFFF1F5F9)),
           ),
           Row(
             children: [

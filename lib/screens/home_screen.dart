@@ -20,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<int> indicesSelecionados = [];
   List<int> _batidasPorAcorde = [];
   int? _posicaoParaSubstituir;
+  String? _currentSaveId;
 
   // Playback
   final ChordPlayer _chordPlayer = ChordPlayer();
@@ -55,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _bpm = item.bpm;
       _posicaoParaSubstituir = null;
     });
+    _currentSaveId = item.id;
     SaveService.instance.loadProgressao.value = null;
   }
 
@@ -115,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     if (nome == null || nome.isEmpty) return;
     await SaveService.instance.salvar(ProgressaoSalva(
-      id: SaveService.newId(),
+      id: _currentSaveId ?? SaveService.newId(),
       nome: nome,
       criadoEm: DateTime.now(),
       tom: tomSelecionado!,
@@ -381,8 +383,9 @@ class _HomeScreenState extends State<HomeScreen> {
   // ── Widgets ───────────────────────────────────────────────────
 
   Widget _buildHeader() {
+    final landscape = MediaQuery.of(context).orientation == Orientation.landscape;
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 28, 24, 32),
+      padding: EdgeInsets.fromLTRB(24, landscape ? 12 : 28, 24, landscape ? 12 : 32),
       color: const Color(0xFF0C1A2E),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -409,27 +412,29 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 20),
-          RichText(
-            text: TextSpan(
-              style: const TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w800,
-                letterSpacing: -1.2,
-                height: 1.15,
+          if (!landscape) ...[
+            const SizedBox(height: 20),
+            RichText(
+              text: TextSpan(
+                style: const TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -1.2,
+                  height: 1.15,
+                ),
+                children: [
+                  const TextSpan(
+                    text: 'Monte sua progressão',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  TextSpan(
+                    text: '\nde acordes',
+                    style: TextStyle(color: Colors.white.withValues(alpha: 0.35)),
+                  ),
+                ],
               ),
-              children: [
-                const TextSpan(
-                  text: 'Monte sua progressão',
-                  style: TextStyle(color: Colors.white),
-                ),
-                TextSpan(
-                  text: '\nde acordes',
-                  style: TextStyle(color: Colors.white.withValues(alpha: 0.35)),
-                ),
-              ],
             ),
-          ),
+          ],
         ],
       ),
     );

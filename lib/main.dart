@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 import 'screens/salvos_screen.dart';
 import 'screens/composicao_screen.dart';
+import 'screens/splash_screen.dart';
 import 'services/save_service.dart';
 
 void main() async {
@@ -19,6 +20,7 @@ class AcordesApp extends StatefulWidget {
 
 class _AcordesAppState extends State<AcordesApp> {
   int _selectedIndex = 0;
+  bool _showSplash = true;
 
   late final List<Widget> _telas;
 
@@ -30,12 +32,15 @@ class _AcordesAppState extends State<AcordesApp> {
       const ComposicaoScreen(),
       SalvosScreen(onNavegar: (i) => setState(() => _selectedIndex = i)),
     ];
+    Future.delayed(const Duration(milliseconds: 1800), () {
+      if (mounted) setState(() => _showSplash = false);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'KC',
+      title: 'KnowChords',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFFF5F8FC),
@@ -45,34 +50,44 @@ class _AcordesAppState extends State<AcordesApp> {
         ),
         useMaterial3: true,
       ),
-      home: Scaffold(
-        body: IndexedStack(index: _selectedIndex, children: _telas),
-        bottomNavigationBar: NavigationBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          surfaceTintColor: Colors.transparent,
-          indicatorColor: const Color(0xFF3B82F6).withValues(alpha: 0.12),
-          selectedIndex: _selectedIndex,
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-          onDestinationSelected: (index) => setState(() => _selectedIndex = index),
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.queue_music_outlined),
-              selectedIcon: Icon(Icons.queue_music, color: Color(0xFF3B82F6)),
-              label: 'Progressão',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.lyrics_outlined),
-              selectedIcon: Icon(Icons.lyrics, color: Color(0xFF3B82F6)),
-              label: 'Composição',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.favorite_outline),
-              selectedIcon: Icon(Icons.favorite, color: Color(0xFF3B82F6)),
-              label: 'Favoritos',
-            ),
-          ],
-        ),
+      home: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 450),
+        child: _showSplash
+            ? const SplashScreen()
+            : Scaffold(
+                key: const ValueKey('main'),
+                body: IndexedStack(index: _selectedIndex, children: _telas),
+                bottomNavigationBar: NavigationBar(
+                  backgroundColor: Colors.white,
+                  elevation: 0,
+                  surfaceTintColor: Colors.transparent,
+                  indicatorColor: const Color(0xFF3B82F6).withValues(alpha: 0.12),
+                  selectedIndex: _selectedIndex,
+                  labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+                  onDestinationSelected: (index) =>
+                      setState(() => _selectedIndex = index),
+                  destinations: const [
+                    NavigationDestination(
+                      icon: Icon(Icons.queue_music_outlined),
+                      selectedIcon:
+                          Icon(Icons.queue_music, color: Color(0xFF3B82F6)),
+                      label: 'Progressão',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.lyrics_outlined),
+                      selectedIcon:
+                          Icon(Icons.lyrics, color: Color(0xFF3B82F6)),
+                      label: 'Composição',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.favorite_outline),
+                      selectedIcon:
+                          Icon(Icons.favorite, color: Color(0xFF3B82F6)),
+                      label: 'Favoritos',
+                    ),
+                  ],
+                ),
+              ),
       ),
     );
   }
