@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../data/acordes.dart';
 import '../widgets/seletor_tom.dart';
 import '../widgets/lista_acordes.dart';
+import '../widgets/chord_diagram.dart';
 import '../services/chord_player.dart';
 import '../services/save_service.dart';
 import '../models/saved_item.dart';
@@ -179,21 +181,34 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            Text(
-              nomeAcorde,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                color: Color(0xFF0F1D2E),
-                letterSpacing: -0.5,
-              ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        nomeAcorde,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF0F1D2E),
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'Quantas batidas este acorde dura?',
+                        style: TextStyle(fontSize: 13, color: Color(0xFFADB9C7)),
+                      ),
+                    ],
+                  ),
+                ),
+                ChordDiagram(chordName: nomeAcorde, size: 0.75),
+              ],
             ),
-            const SizedBox(height: 4),
-            const Text(
-              'Quantas batidas este acorde dura?',
-              style: TextStyle(fontSize: 13, color: Color(0xFFADB9C7)),
-            ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             Row(
               children: List.generate(4, (i) {
                 final beats = i + 1;
@@ -348,7 +363,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               _buildSectionLabel("Sua Progressão"),
                               const SizedBox(height: 14),
-                              _buildSequenciaPreview(acordesDoTom),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildDiagramaAoVivo(acordesDoTom),
+                                  const SizedBox(width: 12),
+                                  Expanded(child: _buildSequenciaPreview(acordesDoTom)),
+                                ],
+                              ),
                               const SizedBox(height: 28),
                               _buildSectionLabel("Acordes em $tomSelecionado"),
                               const SizedBox(height: 14),
@@ -357,6 +379,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ListaAcordes(
                                 acordes: acordesDoTom,
                                 modoSubstituicao: _posicaoParaSubstituir != null,
+                                onLongPress: (acorde) => showChordDiagram(context, acorde),
                                 onSelecionar: (acorde) {
                                   int idx = acordesDoTom.indexOf(acorde);
                                   if (_posicaoParaSubstituir != null) {
@@ -560,6 +583,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const Spacer(),
                 IconButton(
+                  onPressed: indicesSelecionados.isEmpty ? null : () {
+                    final acordesDoTom = obterAcordesDoTom(tomSelecionado!);
+                    final nomes = indicesSelecionados.map((i) => acordesDoTom[i]).join(' · ');
+                    Share.share('🎸 Progressão em $tomSelecionado\n$nomes\n$_bpm BPM\n\nFeito com KnowChords');
+                  },
+                  icon: const Icon(Icons.ios_share_rounded),
+                  color: const Color(0xFFADB9C7),
+                  iconSize: 18,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  tooltip: 'Compartilhar',
+                ),
+                IconButton(
                   onPressed: _tocando ? null : _salvar,
                   icon: const Icon(Icons.bookmark_add_outlined),
                   color: const Color(0xFF3B82F6),
@@ -712,6 +748,79 @@ class _HomeScreenState extends State<HomeScreen> {
           // Play controls
           _buildPlaybackControls(acordesDoTom),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDiagramaAoVivo(List<String> acordesDoTom) {
+    const double s = 0.60;
+    const double diagW = 130 * s;
+    const double diagH = 150 * s;
+
+    final bool playing = _tocando &&
+        _acordeAtual >= 0 &&
+        _acordeAtual < indicesSelecionados.length;
+    final String? chord =
+        playing ? acordesDoTom[indicesSelecionados[_acordeAtual]] : null;
+
+    return Container(
+      width: diagW + 20,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF0C1A2E).withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 280),
+        transitionBuilder: (child, anim) =>
+            FadeTransition(opacity: anim, child: child),
+        child: chord != null
+            ? Column(
+                key: ValueKey(chord),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    chord,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF0F1D2E),
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  ChordDiagram(chordName: chord, size: s),
+                ],
+              )
+            : SizedBox(
+                key: const ValueKey('idle'),
+                width: diagW,
+                height: diagH + 30,
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.piano_outlined, size: 28, color: Color(0xFFCBD5E0)),
+                    SizedBox(height: 8),
+                    Text(
+                      'Toque ▶ para\nver diagrama',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Color(0xFFCBD5E0),
+                        fontWeight: FontWeight.w500,
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
       ),
     );
   }

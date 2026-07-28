@@ -5,12 +5,14 @@ const List<String> _graus = ['I', 'ii', 'iii', 'IV', 'V', 'vi'];
 class ListaAcordes extends StatelessWidget {
   final List<String> acordes;
   final Function(String) onSelecionar;
+  final Function(String)? onLongPress;
   final bool modoSubstituicao;
 
   const ListaAcordes({
     Key? key,
     required this.acordes,
     required this.onSelecionar,
+    this.onLongPress,
     this.modoSubstituicao = false,
   }) : super(key: key);
 
@@ -35,6 +37,7 @@ class ListaAcordes extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           child: InkWell(
             onTap: () => onSelecionar(acorde),
+            onLongPress: onLongPress != null ? () => onLongPress!(acorde) : null,
             borderRadius: BorderRadius.circular(16),
             splashColor: const Color(0xFF3B82F6).withValues(alpha: 0.1),
             highlightColor: const Color(0xFF3B82F6).withValues(alpha: 0.05),

@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import '../data/acordes.dart';
 import '../services/chord_player.dart';
 import '../services/save_service.dart';
 import '../models/saved_item.dart';
 import '../widgets/seletor_tom.dart';
+import '../widgets/chord_diagram.dart';
 
 // ── Silabificação ─────────────────────────────────────────────────────────────
 
@@ -410,6 +412,21 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
                   tooltip: 'Editar letra',
                 ),
                 IconButton(
+                  onPressed: _acordesPorSilaba.isNotEmpty ? () {
+                    final acordesDoTom = _tomSelecionado != null ? obterAcordesDoTom(_tomSelecionado!) : <String>[];
+                    final nomes = (_acordesPorSilaba.keys.toList()..sort())
+                        .map((k) => acordesDoTom[_acordesPorSilaba[k]!])
+                        .toSet()
+                        .join(', ');
+                    final linhas = _controller.text.split('\n').take(2).join(' / ');
+                    Share.share('🎵 $linhas\n\nAcordes: $nomes\nTom: $_tomSelecionado · $_bpm BPM\n\nFeito com KnowChords');
+                  } : null,
+                  icon: const Icon(Icons.ios_share_rounded),
+                  color: _acordesPorSilaba.isNotEmpty ? Colors.white60 : Colors.white24,
+                  iconSize: 18,
+                  tooltip: 'Compartilhar',
+                ),
+                IconButton(
                   onPressed: podeSalvar ? _salvar : null,
                   icon: const Icon(Icons.bookmark_add_outlined),
                   color: podeSalvar ? const Color(0xFF3B82F6) : Colors.white24,
@@ -796,22 +813,39 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
                   ),
                 ),
               ),
-              // Botão remover
+              // Botão diagrama + remover
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 160),
                 child: idxAtivo != null
-                    ? GestureDetector(
-                        key: const ValueKey('remove'),
-                        onTap: _removerAcorde,
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 8),
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFEE2E2),
-                            borderRadius: BorderRadius.circular(10),
+                    ? Row(
+                        key: const ValueKey('actions'),
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          GestureDetector(
+                            onTap: () => showChordDiagram(context, acordes[idxAtivo]),
+                            child: Container(
+                              margin: const EdgeInsets.only(left: 8),
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEFF6FF),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(Icons.piano_outlined, color: Color(0xFF2563EB), size: 20),
+                            ),
                           ),
-                          child: const Icon(Icons.delete_outline, color: Color(0xFFDC2626), size: 20),
-                        ),
+                          GestureDetector(
+                            onTap: _removerAcorde,
+                            child: Container(
+                              margin: const EdgeInsets.only(left: 8),
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFEE2E2),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(Icons.delete_outline, color: Color(0xFFDC2626), size: 20),
+                            ),
+                          ),
+                        ],
                       )
                     : const SizedBox.shrink(key: ValueKey('none')),
               ),
