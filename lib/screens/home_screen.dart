@@ -33,6 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
   int _bpm = 80;
   bool _tocando = false;
 
+  bool _mostrarApoio = false;
+  Timer? _apoioTimer;
+
   AppLocalizations get _l10n => AppLocalizations.of(context)!;
 
   @override
@@ -40,12 +43,16 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     SaveService.instance.loadProgressao.addListener(_onLoad);
     WidgetsBinding.instance.addPostFrameCallback((_) => _onLoad());
+    _apoioTimer = Timer(const Duration(seconds: 10), () {
+      if (mounted) setState(() => _mostrarApoio = true);
+    });
   }
 
   @override
   void dispose() {
     SaveService.instance.loadProgressao.removeListener(_onLoad);
     _playbackTimer?.cancel();
+    _apoioTimer?.cancel();
     _chordPlayer.dispose();
     super.dispose();
   }
@@ -357,7 +364,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                   const SizedBox(height: 28),
-                  const SupportCard(),
+                  AnimatedOpacity(
+                    opacity: _mostrarApoio ? 1.0 : 0.0,
+                    duration: const Duration(milliseconds: 600),
+                    child: AnimatedSize(
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeOut,
+                      child: _mostrarApoio ? const SupportCard() : const SizedBox.shrink(),
+                    ),
+                  ),
                   const SizedBox(height: 12),
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 350),
