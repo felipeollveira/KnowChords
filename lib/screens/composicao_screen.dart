@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
 import '../data/acordes.dart';
 import '../services/chord_player.dart';
@@ -68,8 +69,6 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
   String? _tomSelecionado;
   int? _silabaAtiva;
 
-  // índice da sílaba → índice do acorde na escala (0–5)
-  // Trocar o tom transpõe automaticamente pois os índices são preservados
   final Map<int, int> _acordesPorSilaba = {};
   final Map<int, int> _batidasPorSilaba = {};
   List<List<Object>> _linhas = [];
@@ -81,12 +80,13 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
   int _bpm = 80;
   bool _tocando = false;
   int _acordeAtualIdx = -1;
-  int? _silabaToando;           // índice global da sílaba em reprodução
-  List<int> _chavesDaSequencia = []; // keys ordenadas da sequência atual
+  int? _silabaToando;
+  List<int> _chavesDaSequencia = [];
 
-  // Scroll + keys por linha para auto-scroll
   final _scrollController = ScrollController();
   final Map<int, GlobalKey> _linhaKeys = {};
+
+  AppLocalizations get _l10n => AppLocalizations.of(context)!;
 
   @override
   void initState() {
@@ -129,6 +129,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
 
   Future<void> _salvar() async {
     if (_tomSelecionado == null || _acordesPorSilaba.isEmpty) return;
+    final l10n = _l10n;
     final controller = TextEditingController();
     final nome = await showModalBottomSheet<String>(
       context: context,
@@ -146,8 +147,8 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
             Center(child: Container(width: 36, height: 4,
               decoration: BoxDecoration(color: const Color(0xFFCBD5E0), borderRadius: BorderRadius.circular(2)))),
             const SizedBox(height: 20),
-            const Text('Salvar Composição',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color(0xFF0F1D2E))),
+            Text(l10n.saveCompositionTitle,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color(0xFF0F1D2E))),
             const SizedBox(height: 16),
             TextField(
               controller: controller,
@@ -155,7 +156,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
               textCapitalization: TextCapitalization.sentences,
               onSubmitted: (v) => Navigator.pop(ctx, v.trim()),
               decoration: InputDecoration(
-                hintText: 'Nome da composição...',
+                hintText: l10n.compositionNameHint,
                 filled: true,
                 fillColor: const Color(0xFFF5F8FC),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
@@ -172,7 +173,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text('Salvar', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                child: Text(l10n.save, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
               ),
             ),
           ],
@@ -192,7 +193,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
     ));
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Composição salva!'), behavior: SnackBarBehavior.floating),
+        SnackBar(content: Text(l10n.compositionSaved), behavior: SnackBarBehavior.floating),
       );
     }
   }
@@ -230,8 +231,8 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
   void _selecionarSilaba(int idx) {
     if (_tomSelecionado == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Selecione um tom primeiro'),
+        SnackBar(
+          content: Text(_l10n.selectToneFirst),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -308,7 +309,6 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
     }
   }
 
-  // Rola para manter a sílaba tocando visível
   void _scrollParaSilaba(int silabaIdx) {
     for (int l = 0; l < _linhas.length; l++) {
       for (final item in _linhas[l]) {
@@ -345,8 +345,8 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
     );
   }
 
-  
   Widget _buildHeader() {
+    final l10n = _l10n;
     final podeSalvar = !_modoEdicao && _tomSelecionado != null && _acordesPorSilaba.isNotEmpty;
     final landscape = MediaQuery.of(context).orientation == Orientation.landscape;
     return Container(
@@ -366,9 +366,9 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
                 child: const Icon(Icons.queue_music_rounded, color: Colors.white, size: 16),
               ),
               const SizedBox(width: 10),
-              const Text(
-                "Composição",
-                style: TextStyle(
+              Text(
+                l10n.compositionHeader,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.w200,
@@ -384,18 +384,18 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
                         context: context,
                         builder: (ctx) => AlertDialog(
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                          title: const Text('Editar letra?',
-                              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18)),
-                          content: const Text('Os acordes atribuídos serão perdidos ao editar a letra.'),
+                          title: Text(l10n.editLyricsTitle,
+                              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18)),
+                          content: Text(l10n.chordsWillBeLost),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(ctx, false),
-                              child: const Text('Cancelar'),
+                              child: Text(l10n.cancel),
                             ),
                             FilledButton(
                               onPressed: () => Navigator.pop(ctx, true),
                               style: FilledButton.styleFrom(backgroundColor: const Color(0xFFEF4444)),
-                              child: const Text('Editar assim mesmo'),
+                              child: Text(l10n.editAnyway),
                             ),
                           ],
                         ),
@@ -409,7 +409,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
                   icon: const Icon(Icons.edit_outlined),
                   color: Colors.white60,
                   iconSize: 20,
-                  tooltip: 'Editar letra',
+                  tooltip: l10n.editLyricsTooltip,
                 ),
                 IconButton(
                   onPressed: _acordesPorSilaba.isNotEmpty ? () {
@@ -419,19 +419,19 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
                         .toSet()
                         .join(', ');
                     final linhas = _controller.text.split('\n').take(2).join(' / ');
-                    Share.share('🎵 $linhas\n\nAcordes: $nomes\nTom: $_tomSelecionado · $_bpm BPM\n\nFeito com KnowChords');
+                    Share.share(l10n.compositionShareText(linhas, nomes, _tomSelecionado!, _bpm));
                   } : null,
                   icon: const Icon(Icons.ios_share_rounded),
                   color: _acordesPorSilaba.isNotEmpty ? Colors.white60 : Colors.white24,
                   iconSize: 18,
-                  tooltip: 'Compartilhar',
+                  tooltip: l10n.share,
                 ),
                 IconButton(
                   onPressed: podeSalvar ? _salvar : null,
                   icon: const Icon(Icons.bookmark_add_outlined),
                   color: podeSalvar ? const Color(0xFF3B82F6) : Colors.white24,
                   iconSize: 22,
-                  tooltip: 'Salvar composição',
+                  tooltip: l10n.saveCompositionTooltip,
                 ),
               ],
             ],
@@ -442,6 +442,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
   }
 
   Widget _buildEditor() {
+    final l10n = _l10n;
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -454,7 +455,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
               textAlignVertical: TextAlignVertical.top,
               style: const TextStyle(fontSize: 16, height: 1.7),
               decoration: InputDecoration(
-                hintText: 'Cole ou escreva a letra da música aqui...',
+                hintText: l10n.lyricsHint,
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
@@ -475,9 +476,9 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              child: const Text(
-                'Adicionar Acordes',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              child: Text(
+                l10n.addChords,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -547,7 +548,6 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
     );
   }
 
-  // Palavra: sílabas em Row — nunca quebra no meio
   Widget _buildPalavra(_Palavra palavra, List<String> acordesDoTom) {
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -612,7 +612,6 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Badge do acorde — largura 0 para não alargar a sílaba; badge flutua via OverflowBox
             SizedBox(
               height: 32,
               width: 0,
@@ -671,7 +670,6 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
                 ),
               ),
             ),
-            // Texto da sílaba
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 140),
               style: TextStyle(
@@ -703,6 +701,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
   // ── Barra de acordes ─────────────────────────────────────────────────────
 
   Widget _buildBarraAcordes(List<String> acordes) {
+    final l10n = _l10n;
     final semTom = _tomSelecionado == null;
     final semSilaba = _silabaAtiva == null;
     final idxAtivo = _silabaAtiva != null ? _acordesPorSilaba[_silabaAtiva!] : null;
@@ -724,17 +723,16 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Label dinâmico — oculto em landscape para economizar espaço
           if (!landscape) AnimatedSwitcher(
             duration: const Duration(milliseconds: 200),
             child: Text(
               semTom
-                  ? 'Selecione um tom acima'
+                  ? l10n.selectToneAbove
                   : semSilaba
-                      ? 'Toque em uma sílaba para adicionar acorde'
+                      ? l10n.tapSyllableToAddChord
                       : idxAtivo != null
-                          ? 'Acorde: ${acordes[idxAtivo]}'
-                          : 'Escolha o acorde',
+                          ? l10n.chordLabel(acordes[idxAtivo])
+                          : l10n.chooseChord,
               key: ValueKey('$semTom/$semSilaba/$idxAtivo'),
               style: TextStyle(
                 fontSize: 12,
@@ -747,7 +745,6 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
             ),
           ),
           if (!landscape) const SizedBox(height: 12),
-          // Linha de botões + remover
           Row(
             children: [
               Expanded(
@@ -813,7 +810,6 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
                   ),
                 ),
               ),
-              // Botão diagrama + remover
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 160),
                 child: idxAtivo != null
@@ -857,9 +853,9 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
             const SizedBox(height: 10),
             Row(
               children: [
-                const Text(
-                  'DURAÇÃO',
-                  style: TextStyle(
+                Text(
+                  l10n.duration,
+                  style: const TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
                     color: Color(0xFF94A3B8),
@@ -895,7 +891,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
                               ),
                             ),
                             Text(
-                              beats == 1 ? 'bat.' : 'bat.',
+                              l10n.beatAbbrev,
                               style: TextStyle(
                                 fontSize: 8,
                                 fontWeight: FontWeight.w600,
@@ -919,7 +915,6 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
           ),
           Row(
             children: [
-              // Controles BPM
               _BpmButton(Icons.remove, () => _ajustarBpm(-5)),
               const SizedBox(width: 8),
               SizedBox(
@@ -937,7 +932,6 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
               const SizedBox(width: 8),
               _BpmButton(Icons.add, () => _ajustarBpm(5)),
               const Spacer(),
-              // Botão play/stop
               GestureDetector(
                 onTap: acordes.isEmpty
                     ? null
@@ -974,7 +968,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        _tocando ? 'Parar' : 'Tocar',
+                        _tocando ? l10n.stop : l10n.play,
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,

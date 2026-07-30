@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -31,6 +32,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFF0C1A2E),
       body: FadeTransition(
@@ -59,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen>
               ),
               const SizedBox(height: 6),
               Text(
-                'Sua guitarra, seus acordes',
+                l10n.splashSubtitle,
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.38),
                   fontSize: 13,

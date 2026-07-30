@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 import '../services/save_service.dart';
 import '../models/saved_item.dart';
 import '../data/acordes.dart';
@@ -12,6 +14,8 @@ class SalvosScreen extends StatefulWidget {
 }
 
 class _SalvosScreenState extends State<SalvosScreen> {
+  AppLocalizations get _l10n => AppLocalizations.of(context)!;
+
   @override
   void initState() {
     super.initState();
@@ -37,21 +41,22 @@ class _SalvosScreenState extends State<SalvosScreen> {
   }
 
   Future<bool> _confirmarDelete(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     return await showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            title: const Text('Excluir?',
-                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18)),
-            content: const Text('Este item será removido permanentemente.'),
+            title: Text(l10n.deleteTitle,
+                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18)),
+            content: Text(l10n.deleteContent),
             actions: [
               TextButton(
                   onPressed: () => Navigator.pop(ctx, false),
-                  child: const Text('Cancelar')),
+                  child: Text(l10n.cancel)),
               FilledButton(
                 onPressed: () => Navigator.pop(ctx, true),
                 style: FilledButton.styleFrom(backgroundColor: const Color(0xFFEF4444)),
-                child: const Text('Excluir'),
+                child: Text(l10n.delete),
               ),
             ],
           ),
@@ -99,9 +104,9 @@ class _SalvosScreenState extends State<SalvosScreen> {
             child: const Icon(Icons.bookmark_rounded, color: Colors.white, size: 16),
           ),
           const SizedBox(width: 10),
-          const Text(
-            'Favoritos',
-            style: TextStyle(
+          Text(
+            _l10n.favorites,
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 15,
               fontWeight: FontWeight.w200,
@@ -114,6 +119,7 @@ class _SalvosScreenState extends State<SalvosScreen> {
   }
 
   Widget _buildEmpty() {
+    final l10n = _l10n;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(40),
@@ -129,11 +135,11 @@ class _SalvosScreenState extends State<SalvosScreen> {
               child: const Icon(Icons.bookmark_border_rounded, size: 48, color: Color(0xFF3B82F6)),
             ),
             const SizedBox(height: 20),
-            const Text('Nada salvo ainda',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFF0F1D2E))),
+            Text(l10n.nothingSaved,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFF0F1D2E))),
             const SizedBox(height: 8),
             Text(
-              'Salve progressões e composições\npara acessar aqui.',
+              l10n.saveToAccess,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 14, color: Colors.grey.shade500, height: 1.5),
             ),
@@ -144,10 +150,11 @@ class _SalvosScreenState extends State<SalvosScreen> {
   }
 
   Widget _buildCard(SavedItem item) {
+    final l10n = _l10n;
     final isProgressao = item is ProgressaoSalva;
     final color = isProgressao ? const Color(0xFF3B82F6) : const Color(0xFF2563EB);
     final icon = isProgressao ? Icons.queue_music_rounded : Icons.lyrics_outlined;
-    final label = isProgressao ? 'Progressão' : 'Composição';
+    final label = isProgressao ? l10n.progressionLabel : l10n.compositionLabel;
 
     String info;
     if (item is ProgressaoSalva) {
@@ -272,12 +279,13 @@ class _SalvosScreenState extends State<SalvosScreen> {
   }
 
   String _formatDate(DateTime dt) {
+    final l10n = _l10n;
     final now = DateTime.now();
     final diff = now.difference(dt);
-    if (diff.inDays == 0) return 'Hoje';
-    if (diff.inDays == 1) return 'Ontem';
-    if (diff.inDays < 7) return 'Há ${diff.inDays} dias';
-    const meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-    return '${dt.day} ${meses[dt.month - 1]}';
+    if (diff.inDays == 0) return l10n.dateToday;
+    if (diff.inDays == 1) return l10n.dateYesterday;
+    if (diff.inDays < 7) return l10n.dateNDaysAgo(diff.inDays);
+    final locale = Localizations.localeOf(context).languageCode;
+    return DateFormat.MMMd(locale).format(dt);
   }
 }

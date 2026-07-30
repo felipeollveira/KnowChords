@@ -1,0 +1,118 @@
+{
+  "@@locale": "pt",
+
+  "navProgression": "Progressão",
+  "navComposition": "Composição",
+  "navFavorites": "Favoritos",
+
+  "splashSubtitle": "Sua guitarra, seus acordes",
+
+  "homeTitle1": "Monte sua progressão",
+  "homeTitle2": "de acordes",
+
+  "selectTone": "Selecione o Tom",
+  "yourProgression": "Sua Progressão",
+  "chordsInTone": "Acordes em {tone}",
+  "@chordsInTone": {
+    "placeholders": {
+      "tone": { "type": "String" }
+    }
+  },
+
+  "tapChordToReplace": "Toque um acorde abaixo para substituir",
+  "cancel": "Cancelar",
+  "tapChordsToStart": "Toque nos acordes abaixo para começar",
+
+  "numChords": "{count, plural, =1{1 acorde} other{{count} acordes}}",
+  "@numChords": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "share": "Compartilhar",
+  "saveProgressionTooltip": "Salvar progressão",
+  "clear": "Limpar",
+  "progressionHint": "Segure para remover  •  Toque para substituir  •  ●● para duração",
+  "chooseToneToStart": "Escolha o tom para começar",
+  "availableChordsAppearHere": "Os acordes disponíveis aparecerão aqui",
+  "tapToSeeDiagram": "toque para\nver diagrama",
+  "saveProgressionTitle": "Salvar Progressão",
+  "progressionNameHint": "Nome da progressão...",
+  "save": "Salvar",
+  "progressionSaved": "Progressão salva!",
+
+  "numBeats": "{count, plural, =1{batida} other{batidas}}",
+  "@numBeats": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "howManyBeats": "Quantas batidas este acorde dura?",
+
+  "progressionShareText": "🎸 Progressão em {tone}\n{chords}\n{bpm} BPM\n\nFeito com KnowChords",
+  "@progressionShareText": {
+    "placeholders": {
+      "tone": { "type": "String" },
+      "chords": { "type": "String" },
+      "bpm": { "type": "int" }
+    }
+  },
+
+  "compositionHeader": "Composição",
+  "editLyricsTitle": "Editar letra?",
+  "chordsWillBeLost": "Os acordes atribuídos serão perdidos ao editar a letra.",
+  "editAnyway": "Editar assim mesmo",
+  "editLyricsTooltip": "Editar letra",
+  "saveCompositionTooltip": "Salvar composição",
+  "lyricsHint": "Cole ou escreva a letra da música aqui...",
+  "addChords": "Adicionar Acordes",
+  "selectToneAbove": "Selecione um tom acima",
+  "tapSyllableToAddChord": "Toque em uma sílaba para adicionar acorde",
+
+  "chordLabel": "Acorde: {chord}",
+  "@chordLabel": {
+    "placeholders": {
+      "chord": { "type": "String" }
+    }
+  },
+
+  "chooseChord": "Escolha o acorde",
+  "duration": "DURAÇÃO",
+  "beatAbbrev": "bat.",
+  "stop": "Parar",
+  "play": "Tocar",
+  "selectToneFirst": "Selecione um tom primeiro",
+  "saveCompositionTitle": "Salvar Composição",
+  "compositionNameHint": "Nome da composição...",
+  "compositionSaved": "Composição salva!",
+
+  "compositionShareText": "🎵 {lyrics}\n\nAcordes: {chords}\nTom: {tone} · {bpm} BPM\n\nFeito com KnowChords",
+  "@compositionShareText": {
+    "placeholders": {
+      "lyrics": { "type": "String" },
+      "chords": { "type": "String" },
+      "tone": { "type": "String" },
+      "bpm": { "type": "int" }
+    }
+  },
+
+  "favorites": "Favoritos",
+  "deleteTitle": "Excluir?",
+  "deleteContent": "Este item será removido permanentemente.",
+  "delete": "Excluir",
+  "nothingSaved": "Nada salvo ainda",
+  "saveToAccess": "Salve progressões e composições\npara acessar aqui.",
+  "progressionLabel": "Progressão",
+  "compositionLabel": "Composição",
+  "dateToday": "Hoje",
+  "dateYesterday": "Ontem",
+
+  "dateNDaysAgo": "Há {days} dias",
+  "@dateNDaysAgo": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  }
+}

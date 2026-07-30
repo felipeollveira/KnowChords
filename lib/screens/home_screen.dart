@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../data/acordes.dart';
 import '../widgets/seletor_tom.dart';
@@ -31,11 +32,12 @@ class _HomeScreenState extends State<HomeScreen> {
   int _bpm = 80;
   bool _tocando = false;
 
+  AppLocalizations get _l10n => AppLocalizations.of(context)!;
+
   @override
   void initState() {
     super.initState();
     SaveService.instance.loadProgressao.addListener(_onLoad);
-    // Valor pode ter sido setado antes do listener ser registrado
     WidgetsBinding.instance.addPostFrameCallback((_) => _onLoad());
   }
 
@@ -64,6 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _salvar() async {
     if (indicesSelecionados.isEmpty || tomSelecionado == null) return;
+    final l10n = _l10n;
     final acordesDoTom = obterAcordesDoTom(tomSelecionado!);
     final preview = indicesSelecionados.map((i) => acordesDoTom[i]).join(' · ');
 
@@ -84,8 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
             Center(child: Container(width: 36, height: 4,
               decoration: BoxDecoration(color: const Color(0xFFCBD5E0), borderRadius: BorderRadius.circular(2)))),
             const SizedBox(height: 20),
-            const Text('Salvar Progressão',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color(0xFF0F1D2E))),
+            Text(l10n.saveProgressionTitle,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color(0xFF0F1D2E))),
             const SizedBox(height: 16),
             TextField(
               controller: controller,
@@ -93,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
               textCapitalization: TextCapitalization.sentences,
               onSubmitted: (v) => Navigator.pop(ctx, v.trim()),
               decoration: InputDecoration(
-                hintText: 'Nome da progressão...',
+                hintText: l10n.progressionNameHint,
                 filled: true,
                 fillColor: const Color(0xFFF5F8FC),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
@@ -110,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text('Salvar', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                child: Text(l10n.save, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
               ),
             ),
           ],
@@ -129,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ));
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Progressão salva!'), behavior: SnackBarBehavior.floating),
+        SnackBar(content: Text(l10n.progressionSaved), behavior: SnackBarBehavior.floating),
       );
     }
   }
@@ -158,6 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _selecionarBatidas(int posicao, String nomeAcorde) {
     if (_tocando) return;
+    final l10n = _l10n;
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -198,9 +202,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      const Text(
-                        'Quantas batidas este acorde dura?',
-                        style: TextStyle(fontSize: 13, color: Color(0xFFADB9C7)),
+                      Text(
+                        l10n.howManyBeats,
+                        style: const TextStyle(fontSize: 13, color: Color(0xFFADB9C7)),
                       ),
                     ],
                   ),
@@ -239,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              beats == 1 ? 'batida' : 'batidas',
+                              l10n.numBeats(beats),
                               style: TextStyle(
                                 fontSize: 10,
                                 color: isSelected ? Colors.white70 : const Color(0xFFADB9C7),
@@ -339,7 +343,7 @@ class _HomeScreenState extends State<HomeScreen> {
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
                   const SizedBox(height: 28),
-                  _buildSectionLabel("Selecione o Tom"),
+                  _buildSectionLabel(_l10n.selectTone),
                   const SizedBox(height: 14),
                   SeletorTom(
                     tomSelecionado: tomSelecionado,
@@ -361,7 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             key: ValueKey(tomSelecionado),
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _buildSectionLabel("Sua Progressão"),
+                              _buildSectionLabel(_l10n.yourProgression),
                               const SizedBox(height: 14),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -372,7 +376,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               ),
                               const SizedBox(height: 28),
-                              _buildSectionLabel("Acordes em $tomSelecionado"),
+                              _buildSectionLabel(_l10n.chordsInTone(tomSelecionado!)),
                               const SizedBox(height: 14),
                               if (_posicaoParaSubstituir != null)
                                 _buildSubstituteBanner(),
@@ -406,6 +410,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // ── Widgets ───────────────────────────────────────────────────
 
   Widget _buildHeader() {
+    final l10n = _l10n;
     final landscape = MediaQuery.of(context).orientation == Orientation.landscape;
     return Container(
       padding: EdgeInsets.fromLTRB(24, landscape ? 12 : 28, 24, landscape ? 12 : 32),
@@ -446,12 +451,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 1.15,
                 ),
                 children: [
-                  const TextSpan(
-                    text: 'Monte sua progressão',
-                    style: TextStyle(color: Colors.white),
+                  TextSpan(
+                    text: l10n.homeTitle1,
+                    style: const TextStyle(color: Colors.white),
                   ),
                   TextSpan(
-                    text: '\nde acordes',
+                    text: '\n${l10n.homeTitle2}',
                     style: TextStyle(color: Colors.white.withValues(alpha: 0.35)),
                   ),
                 ],
@@ -489,6 +494,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildSubstituteBanner() {
+    final l10n = _l10n;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -507,17 +513,17 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const SizedBox(width: 10),
-          const Expanded(
+          Expanded(
             child: Text(
-              'Toque um acorde abaixo para substituir',
-              style: TextStyle(fontSize: 13, color: Color(0xFFF97316), fontWeight: FontWeight.w500),
+              l10n.tapChordToReplace,
+              style: const TextStyle(fontSize: 13, color: Color(0xFFF97316), fontWeight: FontWeight.w500),
             ),
           ),
           GestureDetector(
             onTap: () => setState(() => _posicaoParaSubstituir = null),
-            child: const Text(
-              'Cancelar',
-              style: TextStyle(fontSize: 12, color: Color(0xFFF97316), fontWeight: FontWeight.w600),
+            child: Text(
+              l10n.cancel,
+              style: const TextStyle(fontSize: 12, color: Color(0xFFF97316), fontWeight: FontWeight.w600),
             ),
           ),
         ],
@@ -526,6 +532,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildSequenciaPreview(List<String> acordesDoTom) {
+    final l10n = _l10n;
     if (indicesSelecionados.isEmpty) {
       return Container(
         width: double.infinity,
@@ -539,7 +546,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const Icon(Icons.add_circle_outline_rounded, color: Color(0xFF3B82F6), size: 18),
             const SizedBox(width: 10),
             Text(
-              "Toque nos acordes abaixo para começar",
+              l10n.tapChordsToStart,
               style: TextStyle(
                 color: const Color(0xFF3B82F6).withValues(alpha: 0.8),
                 fontSize: 13,
@@ -573,7 +580,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Row(
               children: [
                 Text(
-                  "${indicesSelecionados.length} ${indicesSelecionados.length == 1 ? 'acorde' : 'acordes'}",
+                  l10n.numChords(indicesSelecionados.length),
                   style: const TextStyle(
                     fontSize: 12,
                     color: Color(0xFFADB9C7),
@@ -584,16 +591,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Spacer(),
                 IconButton(
                   onPressed: indicesSelecionados.isEmpty ? null : () {
-                    final acordesDoTom = obterAcordesDoTom(tomSelecionado!);
-                    final nomes = indicesSelecionados.map((i) => acordesDoTom[i]).join(' · ');
-                    Share.share('🎸 Progressão em $tomSelecionado\n$nomes\n$_bpm BPM\n\nFeito com KnowChords');
+                    final acordesDoTom2 = obterAcordesDoTom(tomSelecionado!);
+                    final nomes = indicesSelecionados.map((i) => acordesDoTom2[i]).join(' · ');
+                    Share.share(l10n.progressionShareText(tomSelecionado!, nomes, _bpm));
                   },
                   icon: const Icon(Icons.ios_share_rounded),
                   color: const Color(0xFFADB9C7),
                   iconSize: 18,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                  tooltip: 'Compartilhar',
+                  tooltip: l10n.share,
                 ),
                 IconButton(
                   onPressed: _tocando ? null : _salvar,
@@ -602,7 +609,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   iconSize: 20,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                  tooltip: 'Salvar progressão',
+                  tooltip: l10n.saveProgressionTooltip,
                 ),
                 TextButton(
                   onPressed: () {
@@ -619,7 +626,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                   ),
-                  child: const Text("Limpar"),
+                  child: Text(l10n.clear),
                 ),
               ],
             ),
@@ -732,7 +739,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
               child: Text(
-                'Segure para remover  •  Toque para substituir  •  ●● para duração',
+                l10n.progressionHint,
                 style: TextStyle(
                   fontSize: 11,
                   color: const Color(0xFF0C1A2E).withValues(alpha: 0.25),
@@ -807,17 +814,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 key: const ValueKey('idle'),
                 width: diagW,
                 height: diagH + 30,
-                child: const Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.piano_outlined, size: 28, color: Color(0xFFCBD5E0)),
-                    SizedBox(height: 6),
-                    Icon(Icons.play_circle_outline_rounded, size: 18, color: Color(0xFFCBD5E0)),
-                    SizedBox(height: 4),
+                    const Icon(Icons.piano_outlined, size: 28, color: Color(0xFFCBD5E0)),
+                    const SizedBox(height: 6),
+                    const Icon(Icons.play_circle_outline_rounded, size: 18, color: Color(0xFFCBD5E0)),
+                    const SizedBox(height: 4),
                     Text(
-                      'toque para\nver diagrama',
+                      _l10n.tapToSeeDiagram,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 10,
                         color: Color(0xFFCBD5E0),
                         fontWeight: FontWeight.w500,
@@ -935,6 +942,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildAvisoSelecao() {
+    final l10n = _l10n;
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(vertical: 48),
@@ -949,9 +957,9 @@ class _HomeScreenState extends State<HomeScreen> {
             child: const Icon(Icons.music_note_rounded, size: 36, color: Color(0xFF3B82F6)),
           ),
           const SizedBox(height: 16),
-          const Text(
-            "Escolha o tom para começar",
-            style: TextStyle(
+          Text(
+            l10n.chooseToneToStart,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
               color: Color(0xFF0F1D2E),
@@ -959,9 +967,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const SizedBox(height: 6),
-          const Text(
-            "Os acordes disponíveis aparecerão aqui",
-            style: TextStyle(color: Color(0xFFADB9C7), fontSize: 13),
+          Text(
+            l10n.availableChordsAppearHere,
+            style: const TextStyle(color: Color(0xFFADB9C7), fontSize: 13),
           ),
         ],
       ),

@@ -1,0 +1,118 @@
+{
+  "@@locale": "en",
+
+  "navProgression": "Progression",
+  "navComposition": "Composition",
+  "navFavorites": "Favorites",
+
+  "splashSubtitle": "Your guitar, your chords",
+
+  "homeTitle1": "Build your chord",
+  "homeTitle2": "progression",
+
+  "selectTone": "Select Key",
+  "yourProgression": "Your Progression",
+  "chordsInTone": "Chords in {tone}",
+  "@chordsInTone": {
+    "placeholders": {
+      "tone": { "type": "String" }
+    }
+  },
+
+  "tapChordToReplace": "Tap a chord below to replace",
+  "cancel": "Cancel",
+  "tapChordsToStart": "Tap chords below to start",
+
+  "numChords": "{count, plural, =1{1 chord} other{{count} chords}}",
+  "@numChords": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "share": "Share",
+  "saveProgressionTooltip": "Save progression",
+  "clear": "Clear",
+  "progressionHint": "Hold to remove  •  Tap to replace  •  ●● for duration",
+  "chooseToneToStart": "Choose a key to start",
+  "availableChordsAppearHere": "Available chords will appear here",
+  "tapToSeeDiagram": "tap to\nsee diagram",
+  "saveProgressionTitle": "Save Progression",
+  "progressionNameHint": "Progression name...",
+  "save": "Save",
+  "progressionSaved": "Progression saved!",
+
+  "numBeats": "{count, plural, =1{beat} other{beats}}",
+  "@numBeats": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "howManyBeats": "How many beats does this chord last?",
+
+  "progressionShareText": "🎸 Progression in {tone}\n{chords}\n{bpm} BPM\n\nMade with KnowChords",
+  "@progressionShareText": {
+    "placeholders": {
+      "tone": { "type": "String" },
+      "chords": { "type": "String" },
+      "bpm": { "type": "int" }
+    }
+  },
+
+  "compositionHeader": "Composition",
+  "editLyricsTitle": "Edit lyrics?",
+  "chordsWillBeLost": "Assigned chords will be lost when you edit the lyrics.",
+  "editAnyway": "Edit anyway",
+  "editLyricsTooltip": "Edit lyrics",
+  "saveCompositionTooltip": "Save composition",
+  "lyricsHint": "Paste or type the song lyrics here...",
+  "addChords": "Add Chords",
+  "selectToneAbove": "Select a key above",
+  "tapSyllableToAddChord": "Tap a syllable to add a chord",
+
+  "chordLabel": "Chord: {chord}",
+  "@chordLabel": {
+    "placeholders": {
+      "chord": { "type": "String" }
+    }
+  },
+
+  "chooseChord": "Choose chord",
+  "duration": "DURATION",
+  "beatAbbrev": "beat",
+  "stop": "Stop",
+  "play": "Play",
+  "selectToneFirst": "Select a key first",
+  "saveCompositionTitle": "Save Composition",
+  "compositionNameHint": "Composition name...",
+  "compositionSaved": "Composition saved!",
+
+  "compositionShareText": "🎵 {lyrics}\n\nChords: {chords}\nKey: {tone} · {bpm} BPM\n\nMade with KnowChords",
+  "@compositionShareText": {
+    "placeholders": {
+      "lyrics": { "type": "String" },
+      "chords": { "type": "String" },
+      "tone": { "type": "String" },
+      "bpm": { "type": "int" }
+    }
+  },
+
+  "favorites": "Favorites",
+  "deleteTitle": "Delete?",
+  "deleteContent": "This item will be permanently removed.",
+  "delete": "Delete",
+  "nothingSaved": "Nothing saved yet",
+  "saveToAccess": "Save progressions and compositions\nto access them here.",
+  "progressionLabel": "Progression",
+  "compositionLabel": "Composition",
+  "dateToday": "Today",
+  "dateYesterday": "Yesterday",
+
+  "dateNDaysAgo": "{days} days ago",
+  "@dateNDaysAgo": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  }
+}
