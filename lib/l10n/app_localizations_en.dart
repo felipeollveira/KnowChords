@@ -214,4 +214,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String dateNDaysAgo(int days) {
     return '$days days ago';
   }
+
+  @override
+  String get supportTitle => 'Support the app';
+
+  @override
+  String get supportSubtitle =>
+      'If KnowChords has been useful, consider supporting development ☕';
 }

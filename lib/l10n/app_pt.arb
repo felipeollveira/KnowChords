@@ -114,5 +114,8 @@
     "placeholders": {
       "days": { "type": "int" }
     }
-  }
+  },
+
+  "supportTitle": "Apoiar o app",
+  "supportSubtitle": "Se o KnowChords foi útil, considere apoiar o desenvolvimento ☕"
 }

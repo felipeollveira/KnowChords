@@ -452,6 +452,18 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Há {days} dias'**
   String dateNDaysAgo(int days);
+
+  /// No description provided for @supportTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Apoiar o app'**
+  String get supportTitle;
+
+  /// No description provided for @supportSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Se o KnowChords foi útil, considere apoiar o desenvolvimento ☕'**
+  String get supportSubtitle;
 }
 
 class _AppLocalizationsDelegate

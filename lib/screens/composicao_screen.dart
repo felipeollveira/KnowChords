@@ -482,6 +482,7 @@ class _ComposicaoScreenState extends State<ComposicaoScreen> {
               ),
             ),
           ),
+          //const SupportCard(),
         ],
       ),
     );

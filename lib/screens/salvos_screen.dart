@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../services/save_service.dart';
 import '../models/saved_item.dart';
 import '../data/acordes.dart';
+import '../widgets/support_card.dart';
 
 class SalvosScreen extends StatefulWidget {
   final void Function(int) onNavegar;
@@ -79,8 +80,11 @@ class _SalvosScreenState extends State<SalvosScreen> {
                   ? _buildEmpty()
                   : ListView.builder(
                       padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
-                      itemCount: items.length,
-                      itemBuilder: (_, i) => _buildCard(items[i]),
+                      itemCount: items.length + 1,
+                      itemBuilder: (_, i) {
+                        if (i < items.length) return _buildCard(items[i]);
+                        return const SupportCard();
+                      },
                     ),
             ),
           ],

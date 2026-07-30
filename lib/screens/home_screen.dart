@@ -10,6 +10,7 @@ import '../widgets/chord_diagram.dart';
 import '../services/chord_player.dart';
 import '../services/save_service.dart';
 import '../models/saved_item.dart';
+import '../widgets/support_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -356,6 +357,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                   const SizedBox(height: 28),
+                  const SupportCard(),
+                  const SizedBox(height: 12),
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 350),
                     switchInCurve: Curves.easeOut,
