@@ -1,4 +1,4 @@
-package com.example.know_chords
+package com.fonteagil.knowchords
 
 import io.flutter.embedding.android.FlutterActivity
 

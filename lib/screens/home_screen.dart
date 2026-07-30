@@ -757,11 +757,15 @@ class _HomeScreenState extends State<HomeScreen> {
     const double diagW = 130 * s;
     const double diagH = 150 * s;
 
-    final bool playing = _tocando &&
-        _acordeAtual >= 0 &&
-        _acordeAtual < indicesSelecionados.length;
-    final String? chord =
-        playing ? acordesDoTom[indicesSelecionados[_acordeAtual]] : null;
+    final String? chord;
+    if (_tocando && _acordeAtual >= 0 && _acordeAtual < indicesSelecionados.length) {
+      chord = acordesDoTom[indicesSelecionados[_acordeAtual]];
+    } else if (_posicaoParaSubstituir != null &&
+        _posicaoParaSubstituir! < indicesSelecionados.length) {
+      chord = acordesDoTom[indicesSelecionados[_posicaoParaSubstituir!]];
+    } else {
+      chord = null;
+    }
 
     return Container(
       width: diagW + 20,
@@ -807,9 +811,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.piano_outlined, size: 28, color: Color(0xFFCBD5E0)),
-                    SizedBox(height: 8),
+                    SizedBox(height: 6),
+                    Icon(Icons.play_circle_outline_rounded, size: 18, color: Color(0xFFCBD5E0)),
+                    SizedBox(height: 4),
                     Text(
-                      'Toque ▶ para\nver diagrama',
+                      'toque para\nver diagrama',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 10,
