@@ -22,7 +22,7 @@ class ChordPlayer {
     if (fileName == null) return;
     try {
       await _player.stop();
-      await _player.play(AssetSource('audio/chords/$fileName.wav', mimeType: 'audio/wav'));
+      await _player.play(AssetSource('audio/chords/$fileName.mp3', mimeType: 'audio/mpeg'));
     } catch (_) {}
   }
 
