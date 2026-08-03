@@ -48,11 +48,11 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/knowchords-icon.png"
+  image_path: "assets/images/kn-borda.png"
   web:
     generate: true
-    image_path: "assets/images/knowchords-icon.png"
-    favicon_path: "assets/images/knowchords.png"
+    image_path: "assets/images/kn-borda.png"
+    favicon_path: "assets/images/kn-circle.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
