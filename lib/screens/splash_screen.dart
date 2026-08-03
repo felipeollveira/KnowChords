@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen>
               ),
               const SizedBox(height: 22),
               const Text(
-                'KnowChords',
+                'KnownChords',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 26,

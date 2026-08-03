@@ -1,4 +1,4 @@
-{
+﻿{
   "@@locale": "en",
 
   "navProgression": "Progression",
@@ -33,7 +33,7 @@
   "share": "Share",
   "saveProgressionTooltip": "Save progression",
   "clear": "Clear",
-  "progressionHint": "Hold to remove  •  Tap to replace  •  ●● for duration",
+  "progressionHint": "Hold to remove  â€¢  Tap to replace  â€¢  â—â— for duration",
   "chooseToneToStart": "Choose a key to start",
   "availableChordsAppearHere": "Available chords will appear here",
   "tapToSeeDiagram": "tap to\nsee diagram",
@@ -51,7 +51,7 @@
 
   "howManyBeats": "How many beats does this chord last?",
 
-  "progressionShareText": "🎸 Progression in {tone}\n{chords}\n{bpm} BPM\n\nMade with KnowChords",
+  "progressionShareText": "ðŸŽ¸ Progression in {tone}\n{chords}\n{bpm} BPM\n\nMade with KnownChords",
   "@progressionShareText": {
     "placeholders": {
       "tone": { "type": "String" },
@@ -88,7 +88,7 @@
   "compositionNameHint": "Composition name...",
   "compositionSaved": "Composition saved!",
 
-  "compositionShareText": "🎵 {lyrics}\n\nChords: {chords}\nKey: {tone} · {bpm} BPM\n\nMade with KnowChords",
+  "compositionShareText": "ðŸŽµ {lyrics}\n\nChords: {chords}\nKey: {tone} Â· {bpm} BPM\n\nMade with KnownChords",
   "@compositionShareText": {
     "placeholders": {
       "lyrics": { "type": "String" },
@@ -117,5 +117,5 @@
   },
 
   "supportTitle": "Support the app",
-  "supportSubtitle": "If KnowChords has been useful, consider supporting development ☕"
+  "supportSubtitle": "If KnownChords has been useful, consider supporting development â˜•"
 }

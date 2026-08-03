@@ -42,7 +42,7 @@ class _AcordesAppState extends State<AcordesApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'KnowChords',
+      title: 'KnownChords',
       debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
         AppLocalizations.delegate,

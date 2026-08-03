@@ -9,10 +9,10 @@ class AppLocalizationsPt extends AppLocalizations {
   AppLocalizationsPt([String locale = 'pt']) : super(locale);
 
   @override
-  String get navProgression => 'Progressão';
+  String get navProgression => 'ProgressÃ£o';
 
   @override
-  String get navComposition => 'Composição';
+  String get navComposition => 'ComposiÃ§Ã£o';
 
   @override
   String get navFavorites => 'Favoritos';
@@ -21,7 +21,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get splashSubtitle => 'Sua guitarra, seus acordes';
 
   @override
-  String get homeTitle1 => 'Monte sua progressão';
+  String get homeTitle1 => 'Monte sua progressÃ£o';
 
   @override
   String get homeTitle2 => 'de acordes';
@@ -30,7 +30,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get selectTone => 'Selecione o Tom';
 
   @override
-  String get yourProgression => 'Sua Progressão';
+  String get yourProgression => 'Sua ProgressÃ£o';
 
   @override
   String chordsInTone(String tone) {
@@ -44,7 +44,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get cancel => 'Cancelar';
 
   @override
-  String get tapChordsToStart => 'Toque nos acordes abaixo para começar';
+  String get tapChordsToStart => 'Toque nos acordes abaixo para comeÃ§ar';
 
   @override
   String numChords(int count) {
@@ -61,36 +61,36 @@ class AppLocalizationsPt extends AppLocalizations {
   String get share => 'Compartilhar';
 
   @override
-  String get saveProgressionTooltip => 'Salvar progressão';
+  String get saveProgressionTooltip => 'Salvar progressÃ£o';
 
   @override
   String get clear => 'Limpar';
 
   @override
   String get progressionHint =>
-      'Segure para remover  •  Toque para substituir  •  ●● para duração';
+      'Segure para remover  â€¢  Toque para substituir  â€¢  â—â— para duraÃ§Ã£o';
 
   @override
-  String get chooseToneToStart => 'Escolha o tom para começar';
+  String get chooseToneToStart => 'Escolha o tom para comeÃ§ar';
 
   @override
   String get availableChordsAppearHere =>
-      'Os acordes disponíveis aparecerão aqui';
+      'Os acordes disponÃ­veis aparecerÃ£o aqui';
 
   @override
   String get tapToSeeDiagram => 'toque para\nver diagrama';
 
   @override
-  String get saveProgressionTitle => 'Salvar Progressão';
+  String get saveProgressionTitle => 'Salvar ProgressÃ£o';
 
   @override
-  String get progressionNameHint => 'Nome da progressão...';
+  String get progressionNameHint => 'Nome da progressÃ£o...';
 
   @override
   String get save => 'Salvar';
 
   @override
-  String get progressionSaved => 'Progressão salva!';
+  String get progressionSaved => 'ProgressÃ£o salva!';
 
   @override
   String numBeats(int count) {
@@ -108,18 +108,18 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String progressionShareText(String tone, String chords, int bpm) {
-    return '🎸 Progressão em $tone\n$chords\n$bpm BPM\n\nFeito com KnowChords';
+    return 'ðŸŽ¸ ProgressÃ£o em $tone\n$chords\n$bpm BPM\n\nFeito com KnownChords';
   }
 
   @override
-  String get compositionHeader => 'Composição';
+  String get compositionHeader => 'ComposiÃ§Ã£o';
 
   @override
   String get editLyricsTitle => 'Editar letra?';
 
   @override
   String get chordsWillBeLost =>
-      'Os acordes atribuídos serão perdidos ao editar a letra.';
+      'Os acordes atribuÃ­dos serÃ£o perdidos ao editar a letra.';
 
   @override
   String get editAnyway => 'Editar assim mesmo';
@@ -128,10 +128,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get editLyricsTooltip => 'Editar letra';
 
   @override
-  String get saveCompositionTooltip => 'Salvar composição';
+  String get saveCompositionTooltip => 'Salvar composiÃ§Ã£o';
 
   @override
-  String get lyricsHint => 'Cole ou escreva a letra da música aqui...';
+  String get lyricsHint => 'Cole ou escreva a letra da mÃºsica aqui...';
 
   @override
   String get addChords => 'Adicionar Acordes';
@@ -141,7 +141,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get tapSyllableToAddChord =>
-      'Toque em uma sílaba para adicionar acorde';
+      'Toque em uma sÃ­laba para adicionar acorde';
 
   @override
   String chordLabel(String chord) {
@@ -152,7 +152,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get chooseChord => 'Escolha o acorde';
 
   @override
-  String get duration => 'DURAÇÃO';
+  String get duration => 'DURAÃ‡ÃƒO';
 
   @override
   String get beatAbbrev => 'bat.';
@@ -167,18 +167,18 @@ class AppLocalizationsPt extends AppLocalizations {
   String get selectToneFirst => 'Selecione um tom primeiro';
 
   @override
-  String get saveCompositionTitle => 'Salvar Composição';
+  String get saveCompositionTitle => 'Salvar ComposiÃ§Ã£o';
 
   @override
-  String get compositionNameHint => 'Nome da composição...';
+  String get compositionNameHint => 'Nome da composiÃ§Ã£o...';
 
   @override
-  String get compositionSaved => 'Composição salva!';
+  String get compositionSaved => 'ComposiÃ§Ã£o salva!';
 
   @override
   String compositionShareText(
       String lyrics, String chords, String tone, int bpm) {
-    return '🎵 $lyrics\n\nAcordes: $chords\nTom: $tone · $bpm BPM\n\nFeito com KnowChords';
+    return 'ðŸŽµ $lyrics\n\nAcordes: $chords\nTom: $tone Â· $bpm BPM\n\nFeito com KnownChords';
   }
 
   @override
@@ -188,7 +188,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get deleteTitle => 'Excluir?';
 
   @override
-  String get deleteContent => 'Este item será removido permanentemente.';
+  String get deleteContent => 'Este item serÃ¡ removido permanentemente.';
 
   @override
   String get delete => 'Excluir';
@@ -198,13 +198,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get saveToAccess =>
-      'Salve progressões e composições\npara acessar aqui.';
+      'Salve progressÃµes e composiÃ§Ãµes\npara acessar aqui.';
 
   @override
-  String get progressionLabel => 'Progressão';
+  String get progressionLabel => 'ProgressÃ£o';
 
   @override
-  String get compositionLabel => 'Composição';
+  String get compositionLabel => 'ComposiÃ§Ã£o';
 
   @override
   String get dateToday => 'Hoje';
@@ -214,7 +214,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String dateNDaysAgo(int days) {
-    return 'Há $days dias';
+    return 'HÃ¡ $days dias';
   }
 
   @override
@@ -222,5 +222,5 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get supportSubtitle =>
-      'Se o KnowChords foi útil, considere apoiar o desenvolvimento ☕';
+      'Se o KnownChords foi Ãºtil, considere apoiar o desenvolvimento â˜•';
 }

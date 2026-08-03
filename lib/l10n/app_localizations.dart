@@ -101,13 +101,13 @@ abstract class AppLocalizations {
   /// No description provided for @navProgression.
   ///
   /// In pt, this message translates to:
-  /// **'Progressão'**
+  /// **'ProgressÃ£o'**
   String get navProgression;
 
   /// No description provided for @navComposition.
   ///
   /// In pt, this message translates to:
-  /// **'Composição'**
+  /// **'ComposiÃ§Ã£o'**
   String get navComposition;
 
   /// No description provided for @navFavorites.
@@ -125,7 +125,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeTitle1.
   ///
   /// In pt, this message translates to:
-  /// **'Monte sua progressão'**
+  /// **'Monte sua progressÃ£o'**
   String get homeTitle1;
 
   /// No description provided for @homeTitle2.
@@ -143,7 +143,7 @@ abstract class AppLocalizations {
   /// No description provided for @yourProgression.
   ///
   /// In pt, this message translates to:
-  /// **'Sua Progressão'**
+  /// **'Sua ProgressÃ£o'**
   String get yourProgression;
 
   /// No description provided for @chordsInTone.
@@ -167,7 +167,7 @@ abstract class AppLocalizations {
   /// No description provided for @tapChordsToStart.
   ///
   /// In pt, this message translates to:
-  /// **'Toque nos acordes abaixo para começar'**
+  /// **'Toque nos acordes abaixo para comeÃ§ar'**
   String get tapChordsToStart;
 
   /// No description provided for @numChords.
@@ -185,7 +185,7 @@ abstract class AppLocalizations {
   /// No description provided for @saveProgressionTooltip.
   ///
   /// In pt, this message translates to:
-  /// **'Salvar progressão'**
+  /// **'Salvar progressÃ£o'**
   String get saveProgressionTooltip;
 
   /// No description provided for @clear.
@@ -197,19 +197,19 @@ abstract class AppLocalizations {
   /// No description provided for @progressionHint.
   ///
   /// In pt, this message translates to:
-  /// **'Segure para remover  •  Toque para substituir  •  ●● para duração'**
+  /// **'Segure para remover  â€¢  Toque para substituir  â€¢  â—â— para duraÃ§Ã£o'**
   String get progressionHint;
 
   /// No description provided for @chooseToneToStart.
   ///
   /// In pt, this message translates to:
-  /// **'Escolha o tom para começar'**
+  /// **'Escolha o tom para comeÃ§ar'**
   String get chooseToneToStart;
 
   /// No description provided for @availableChordsAppearHere.
   ///
   /// In pt, this message translates to:
-  /// **'Os acordes disponíveis aparecerão aqui'**
+  /// **'Os acordes disponÃ­veis aparecerÃ£o aqui'**
   String get availableChordsAppearHere;
 
   /// No description provided for @tapToSeeDiagram.
@@ -221,13 +221,13 @@ abstract class AppLocalizations {
   /// No description provided for @saveProgressionTitle.
   ///
   /// In pt, this message translates to:
-  /// **'Salvar Progressão'**
+  /// **'Salvar ProgressÃ£o'**
   String get saveProgressionTitle;
 
   /// No description provided for @progressionNameHint.
   ///
   /// In pt, this message translates to:
-  /// **'Nome da progressão...'**
+  /// **'Nome da progressÃ£o...'**
   String get progressionNameHint;
 
   /// No description provided for @save.
@@ -239,7 +239,7 @@ abstract class AppLocalizations {
   /// No description provided for @progressionSaved.
   ///
   /// In pt, this message translates to:
-  /// **'Progressão salva!'**
+  /// **'ProgressÃ£o salva!'**
   String get progressionSaved;
 
   /// No description provided for @numBeats.
@@ -257,13 +257,13 @@ abstract class AppLocalizations {
   /// No description provided for @progressionShareText.
   ///
   /// In pt, this message translates to:
-  /// **'🎸 Progressão em {tone}\n{chords}\n{bpm} BPM\n\nFeito com KnowChords'**
+  /// **'ðŸŽ¸ ProgressÃ£o em {tone}\n{chords}\n{bpm} BPM\n\nFeito com KnownChords'**
   String progressionShareText(String tone, String chords, int bpm);
 
   /// No description provided for @compositionHeader.
   ///
   /// In pt, this message translates to:
-  /// **'Composição'**
+  /// **'ComposiÃ§Ã£o'**
   String get compositionHeader;
 
   /// No description provided for @editLyricsTitle.
@@ -275,7 +275,7 @@ abstract class AppLocalizations {
   /// No description provided for @chordsWillBeLost.
   ///
   /// In pt, this message translates to:
-  /// **'Os acordes atribuídos serão perdidos ao editar a letra.'**
+  /// **'Os acordes atribuÃ­dos serÃ£o perdidos ao editar a letra.'**
   String get chordsWillBeLost;
 
   /// No description provided for @editAnyway.
@@ -293,13 +293,13 @@ abstract class AppLocalizations {
   /// No description provided for @saveCompositionTooltip.
   ///
   /// In pt, this message translates to:
-  /// **'Salvar composição'**
+  /// **'Salvar composiÃ§Ã£o'**
   String get saveCompositionTooltip;
 
   /// No description provided for @lyricsHint.
   ///
   /// In pt, this message translates to:
-  /// **'Cole ou escreva a letra da música aqui...'**
+  /// **'Cole ou escreva a letra da mÃºsica aqui...'**
   String get lyricsHint;
 
   /// No description provided for @addChords.
@@ -317,7 +317,7 @@ abstract class AppLocalizations {
   /// No description provided for @tapSyllableToAddChord.
   ///
   /// In pt, this message translates to:
-  /// **'Toque em uma sílaba para adicionar acorde'**
+  /// **'Toque em uma sÃ­laba para adicionar acorde'**
   String get tapSyllableToAddChord;
 
   /// No description provided for @chordLabel.
@@ -335,7 +335,7 @@ abstract class AppLocalizations {
   /// No description provided for @duration.
   ///
   /// In pt, this message translates to:
-  /// **'DURAÇÃO'**
+  /// **'DURAÃ‡ÃƒO'**
   String get duration;
 
   /// No description provided for @beatAbbrev.
@@ -365,25 +365,25 @@ abstract class AppLocalizations {
   /// No description provided for @saveCompositionTitle.
   ///
   /// In pt, this message translates to:
-  /// **'Salvar Composição'**
+  /// **'Salvar ComposiÃ§Ã£o'**
   String get saveCompositionTitle;
 
   /// No description provided for @compositionNameHint.
   ///
   /// In pt, this message translates to:
-  /// **'Nome da composição...'**
+  /// **'Nome da composiÃ§Ã£o...'**
   String get compositionNameHint;
 
   /// No description provided for @compositionSaved.
   ///
   /// In pt, this message translates to:
-  /// **'Composição salva!'**
+  /// **'ComposiÃ§Ã£o salva!'**
   String get compositionSaved;
 
   /// No description provided for @compositionShareText.
   ///
   /// In pt, this message translates to:
-  /// **'🎵 {lyrics}\n\nAcordes: {chords}\nTom: {tone} · {bpm} BPM\n\nFeito com KnowChords'**
+  /// **'ðŸŽµ {lyrics}\n\nAcordes: {chords}\nTom: {tone} Â· {bpm} BPM\n\nFeito com KnownChords'**
   String compositionShareText(
       String lyrics, String chords, String tone, int bpm);
 
@@ -402,7 +402,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteContent.
   ///
   /// In pt, this message translates to:
-  /// **'Este item será removido permanentemente.'**
+  /// **'Este item serÃ¡ removido permanentemente.'**
   String get deleteContent;
 
   /// No description provided for @delete.
@@ -420,19 +420,19 @@ abstract class AppLocalizations {
   /// No description provided for @saveToAccess.
   ///
   /// In pt, this message translates to:
-  /// **'Salve progressões e composições\npara acessar aqui.'**
+  /// **'Salve progressÃµes e composiÃ§Ãµes\npara acessar aqui.'**
   String get saveToAccess;
 
   /// No description provided for @progressionLabel.
   ///
   /// In pt, this message translates to:
-  /// **'Progressão'**
+  /// **'ProgressÃ£o'**
   String get progressionLabel;
 
   /// No description provided for @compositionLabel.
   ///
   /// In pt, this message translates to:
-  /// **'Composição'**
+  /// **'ComposiÃ§Ã£o'**
   String get compositionLabel;
 
   /// No description provided for @dateToday.
@@ -450,7 +450,7 @@ abstract class AppLocalizations {
   /// No description provided for @dateNDaysAgo.
   ///
   /// In pt, this message translates to:
-  /// **'Há {days} dias'**
+  /// **'HÃ¡ {days} dias'**
   String dateNDaysAgo(int days);
 
   /// No description provided for @supportTitle.
@@ -462,7 +462,7 @@ abstract class AppLocalizations {
   /// No description provided for @supportSubtitle.
   ///
   /// In pt, this message translates to:
-  /// **'Se o KnowChords foi útil, considere apoiar o desenvolvimento ☕'**
+  /// **'Se o KnownChords foi Ãºtil, considere apoiar o desenvolvimento â˜•'**
   String get supportSubtitle;
 }
 

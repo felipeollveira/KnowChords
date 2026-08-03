@@ -68,7 +68,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get progressionHint =>
-      'Hold to remove  •  Tap to replace  •  ●● for duration';
+      'Hold to remove  â€¢  Tap to replace  â€¢  â—â— for duration';
 
   @override
   String get chooseToneToStart => 'Choose a key to start';
@@ -107,7 +107,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String progressionShareText(String tone, String chords, int bpm) {
-    return '🎸 Progression in $tone\n$chords\n$bpm BPM\n\nMade with KnowChords';
+    return 'ðŸŽ¸ Progression in $tone\n$chords\n$bpm BPM\n\nMade with KnownChords';
   }
 
   @override
@@ -176,7 +176,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String compositionShareText(
       String lyrics, String chords, String tone, int bpm) {
-    return '🎵 $lyrics\n\nChords: $chords\nKey: $tone · $bpm BPM\n\nMade with KnowChords';
+    return 'ðŸŽµ $lyrics\n\nChords: $chords\nKey: $tone Â· $bpm BPM\n\nMade with KnownChords';
   }
 
   @override
@@ -220,5 +220,5 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get supportSubtitle =>
-      'If KnowChords has been useful, consider supporting development ☕';
+      'If KnownChords has been useful, consider supporting development â˜•';
 }

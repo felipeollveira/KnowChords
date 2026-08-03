@@ -448,7 +448,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(width: 10),
               const Text(
-                "KnowChords",
+                "KnownChords",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 15,
